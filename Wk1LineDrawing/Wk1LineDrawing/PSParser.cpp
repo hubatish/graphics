@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "PSParser.h"
 
 PSParser::PSParser(string f)

@@ -1,3 +1,37 @@
-﻿  Wk1LineDrawing.cpp
-d:\zach\school\college14-15\computergraphics\projects\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(61): warning C4129: ' ' : unrecognized character escape sequence
-  Wk1LineDrawing.vcxproj -> D:\ZAch\school\College14-15\ComputerGraphics\Projects\Wk1LineDrawing\Wk1LineDrawing\Debug\Wk1LineDrawing.exe
+﻿  ZPoint.cpp
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(20): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(24): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(25): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(26): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(49): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(52): warning C4305: 'return' : truncation from 'int' to 'float'
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(75): warning C4018: '<' : signed/unsigned mismatch
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(77): warning C4244: '*=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(78): warning C4244: '*=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(79): warning C4244: '*=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(80): warning C4244: '*=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(86): warning C4018: '<' : signed/unsigned mismatch
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\zpoint.cpp(96): warning C4018: '<' : signed/unsigned mismatch
+  XPMOutput.cpp
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(107): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(107): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(114): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(124): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(140): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(140): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(147): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\xpmoutput.cpp(244): warning C4018: '<' : signed/unsigned mismatch
+  Wk1LineDrawing.cpp
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(65): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(69): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(73): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(77): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(82): warning C4129: ' ' : unrecognized character escape sequence
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(97): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\wk1linedrawing.cpp(101): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+  PSParser.cpp
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\psparser.cpp(48): warning C4018: '<' : signed/unsigned mismatch
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\psparser.cpp(56): warning C4018: '<' : signed/unsigned mismatch
+d:\zach\school\college14-15\computergraphics\graphics\wk1linedrawing\wk1linedrawing\psparser.cpp(66): warning C4018: '<' : signed/unsigned mismatch
+  Generating Code...
+  Wk1LineDrawing.vcxproj -> D:\ZAch\school\College14-15\ComputerGraphics\graphics\Wk1LineDrawing\Wk1LineDrawing\Debug\Wk1LineDrawing.exe

@@ -1,7 +1,6 @@
 // Wk1LineDrawing.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
 #include "PSParser.h"
 #include "ZPoint.h"
 #include "XPMOutput.h"
