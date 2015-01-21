@@ -1,6 +1,9 @@
 #ifndef Z_POINT_H
 #define Z_POINT_H
 #include <vector>
+#include <cmath>
+#include <cstdint>
+#include <climits>
 #pragma once
 using namespace std;
 
