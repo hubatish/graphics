@@ -72,7 +72,7 @@ void XPMOutput::Output(ostream* out)
 
 ///Draw a line onto pixels
 ///While loop algorithm pseudo code from here: http://ocw.unican.es/ensenanzas-tecnicas/visualizacion-e-interaccion-grafica/material-de-clase-2/03-LineAlgorithms.pdf
-void XPMOutput::DrawLine(ZLine line, XPMOutput::Color color)
+void XPMOutput::DrawLine(ZLine line, Color color)
 {
 	//Clip the line before drawing it
 	if (!ClipLine(line))

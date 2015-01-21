@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 	XPMOutput xpm(lowerBound,upperBound);
 
 	TestLineDraws(xpm);
-	xpm.DrawImage(*image, XPMOutput::Color::BLACK);
+	xpm.DrawImage(*image, Color::BLACK);
 
 	ofstream fout;
 	fout.open("out.xpm");
