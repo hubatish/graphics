@@ -31,8 +31,8 @@ public:
 	ZPoint ClipPoint(ZPoint point, ZLine line);
 
 private:
-	int num_colors = 2;
-	int chars_per_pixel = 1;
+	const static int num_colors = 2;
+	const static int chars_per_pixel = 1;
 	//Requirements for bounds: lowerBoundx<=upperBoundx & lowerBoundy<=upperBoundy
 	ZPoint lowerBound, upperBound;
 	//Requirements for grid: has positions for every coordinate within the bounds
