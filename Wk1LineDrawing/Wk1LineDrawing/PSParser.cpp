@@ -26,7 +26,6 @@ PSParser::PSParser(string f)
 			throw 20;
 		}
 		fileContents.erase(pos, fileContents.size());
-		cout << fileContents << endl;
 	}
 	catch (exception ex)
 	{
