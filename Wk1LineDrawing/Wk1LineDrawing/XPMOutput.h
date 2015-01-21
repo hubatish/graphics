@@ -12,10 +12,21 @@
 #include <bitset>
 using namespace std;
 
+enum class Color : char { BLACK = 'B', WHITE = 'W' };
+
 class XPMOutput
 {
+private:
+	const static int num_colors = 2;
+	const static int chars_per_pixel = 1;
+	//Requirements for bounds: lowerBoundx<=upperBoundx & lowerBoundy<=upperBoundy
+	ZPoint lowerBound, upperBound;
+	//Requirements for grid: has positions for every coordinate within the bounds
+	//Accessed by [x][y]
+	vector<vector<Color> > grid;
+	bitset<4> GetCohenSutherlandOutcode(ZPoint point);
+
 public:
-	enum class Color : char { BLACK = 'B', WHITE = 'W' };
 
 	XPMOutput(ZPoint* lowerBound = NULL, ZPoint* upperBound = NULL);
 	~XPMOutput();
@@ -30,15 +41,6 @@ public:
 	bool ClipLine(ZLine & line);
 	ZPoint ClipPoint(ZPoint point, ZLine line);
 
-private:
-	const static int num_colors = 2;
-	const static int chars_per_pixel = 1;
-	//Requirements for bounds: lowerBoundx<=upperBoundx & lowerBoundy<=upperBoundy
-	ZPoint lowerBound, upperBound;
-	//Requirements for grid: has positions for every coordinate within the bounds
-	//Accessed by [x][y]
-	vector<vector<Color>> grid;
-	bitset<4> GetCohenSutherlandOutcode(ZPoint point);
 };
 
 #endif
