@@ -21,6 +21,10 @@ XPMOutput::XPMOutput(ZPoint* lowerBound, ZPoint * upperBound)
 		this->upperBound = *upperBound;
 	}
 
+	//need this for offsets
+	negLowerBound = this->lowerBound;
+	negLowerBound.Scale(-1);
+
 	//size initial grid based on bounds
 	int width = GetWidth();
 	int height = GetHeight();
@@ -69,6 +73,14 @@ void XPMOutput::Output(ostream* out)
 	}
 	*out << "};" << endl;
 }
+
+void XPMOutput::DrawPoint(ZPoint point, Color color)
+{ 
+	//offset point so lowerBound is always at 0,0
+	OffsetPoint(point);
+	grid[point.x][point.y] = color; 
+}
+
 
 ///Draw a line onto pixels
 ///While loop algorithm pseudo code from here: http://ocw.unican.es/ensenanzas-tecnicas/visualizacion-e-interaccion-grafica/material-de-clase-2/03-LineAlgorithms.pdf
@@ -239,10 +251,102 @@ bool XPMOutput::ClipLine(ZLine& line)
 	}
 }
 
+//Implement Sutherland - Hodgeman algorithm
+ZPolygon * XPMOutput::ClipPolygon(ZPolygon & polygon)
+{
+	if (polygon.points.size() < 2)
+	{
+		//this polygon is too small, not even a line
+		return new ZPolygon();
+	}
+
+	//Set up in/out info for each point
+	vector<bitset<4>> pointsAreIn;
+	for (int i = 0; i < polygon.points.size(); i++)
+	{
+		pointsAreIn.push_back(GetCohenSutherlandOutcode(polygon.points[i]));
+	}
+
+	ZPolygon* newPolygon = new ZPolygon();
+
+	//go through each edge
+	//for (int edge = 0; edge < 4; edge++)
+	{
+		int pSize = polygon.points.size();
+		for (int i = pSize -1; i >=0; i--)
+		{
+			//Process based on whether this point and adjacent points are inside
+			ZPoint * prevPoint;
+			int prevLocation;
+			if (i == pSize-1)
+			{
+				//first point wraps around to last
+				prevLocation = 0;
+			}
+			else
+			{
+				prevLocation = i + 1;
+			}
+			prevPoint = &polygon.points[prevLocation];
+
+			//handle cases for all the edges
+			if (pointsAreIn[i] == bitset<4>(0))
+			{
+				/*if (pointsAreIn[prevLocation] == bitset<4>(0))
+				{
+					//both points are in, add this point!
+					newPolygon->AddPoint(polygon.points[i]);
+				}
+				else
+				{
+					//previous point not in... need to find intersection point
+					newPolygon->AddPoint(ClipPoint(*prevPoint, ZLine(*prevPoint, polygon.points[i])));
+				}*/
+				if (pointsAreIn[prevLocation] != bitset<4>())
+				{
+					//previous point not in... need to find intersection point
+					newPolygon->AddPoint(ClipPoint(*prevPoint, ZLine(*prevPoint, polygon.points[i])));
+				}
+				newPolygon->AddPoint(polygon.points[i]);
+			}
+			else
+			{
+				if (pointsAreIn[prevLocation] == bitset<4>(0))
+				{
+					//previous point in.. need to find interesection point
+					newPolygon->AddPoint(ClipPoint(polygon.points[i], ZLine(*prevPoint, polygon.points[i])));
+				}
+				//else do nothing, both points are out
+			}
+
+		}
+	}
+	return newPolygon;
+}
+
+void XPMOutput::DrawPolygon(ZPolygon & polygon, Color color)
+{
+	if (polygon.points.size() < 2)
+	{
+		return;
+	}
+	ZPolygon * clippedPoly = ClipPolygon(polygon);
+	ZPoint * prev = &clippedPoly->points[clippedPoly->points.size()-1];
+	for (int i = 0; i < clippedPoly->points.size(); i++)
+	{
+		DrawLine(ZLine(clippedPoly->points[i], *prev), color);
+		prev = &clippedPoly->points[i];
+	}
+}
+
 void XPMOutput::DrawImage(ZImage & image, Color color)
 {
 	for (int i = 0; i < image.lines.size(); i++)
 	{
 		DrawLine(image.lines[i],color);
+	}
+	for (int i = 0; i < image.polygons.size(); i++)
+	{
+		DrawPolygon(image.polygons[i], color);
 	}
 }
