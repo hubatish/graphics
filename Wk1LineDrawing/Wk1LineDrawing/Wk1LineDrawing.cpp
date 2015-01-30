@@ -21,13 +21,14 @@ int main(int argc, char* argv[])
 	float translateY = 0;
 
 	//Parse command line arguments
-	for (int i = 0; i < argc - 1; i += 2)
+	for (int i = 0; i < argc - 1; i ++)
 	{
-		if ("-f" == argv[i])
+		string curArg(argv[i]);
+		if (curArg.compare("-f")==0)
 		{
 			fileName = argv[i + 1];
 		}
-		else if ("-a" == argv[i])
+		else if (curArg.compare("-a")==0)
 		{
 			//lower bound x dimension world window
 			if (lowerBound == NULL)
@@ -36,7 +37,7 @@ int main(int argc, char* argv[])
 			}
 			lowerBound->x = stoi(argv[i + 1]);
 		}
-		else if ("-b" == argv[i])
+		else if (curArg.compare("-b")==0)
 		{
 			if (lowerBound == NULL)
 			{
@@ -44,7 +45,7 @@ int main(int argc, char* argv[])
 			}
 			lowerBound->y = stoi(argv[i + 1]);
 		}
-		else if ("-c" == argv[i])
+		else if (curArg.compare("-c") == 0)
 		{
 			if (upperBound == NULL)
 			{
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 			}
 			upperBound->x = stoi(argv[i + 1]);
 		}
-		else if ("-d" == argv[i])
+		else if (curArg.compare("-d") == 0)
 		{
 			if (upperBound == NULL)
 			{
@@ -60,21 +61,21 @@ int main(int argc, char* argv[])
 			}
 			upperBound->y = stoi(argv[i + 1]);
 		}
-		else if ("-s" == argv[i])
+		else if (curArg.compare("-s") == 0)
 		{
-			scale = stoi(argv[i + 1]);
+			scale = stof(argv[i + 1]);
 		}
-		else if ("-r" == argv[i])
+		else if (curArg.compare("-r") == 0)
 		{
-			degreeAngle = stoi(argv[i + 1]);
+			degreeAngle = stof(argv[i + 1]);
 		}
-		else if ("-m" == argv[i])
+		else if (curArg.compare("-m") == 0)
 		{
-			translateX = stoi(argv[i + 1]);
+			translateX = stof(argv[i + 1]);
 		}
-		else if ("-n" == argv[i])
+		else if (curArg.compare("-n") == 0)
 		{
-			translateY = stoi(argv[i + 1]);
+			translateY = stof(argv[i + 1]);
 		}
 	}
 

@@ -57,7 +57,7 @@ void XPMOutput::Output(ostream* out)
 	*out << "\"" << static_cast<char>(Color::BLACK) << " c #000000\"," << endl;
 	*out << "\"" << static_cast<char>(Color::WHITE) << " c #ffffff\"," << endl;
 	*out << "/* pixels */" << endl;
-	for (int y = 0; y <= height; y++)
+	for (int y = height; y >=0; y--)
 	{
 		*out << "\"";
 		for (int x = 0; x <= width; x++)
