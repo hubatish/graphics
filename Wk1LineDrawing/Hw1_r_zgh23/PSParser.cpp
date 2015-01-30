@@ -2,6 +2,7 @@
 
 PSParser::PSParser(string f)
 {
+//commetn for make
 	try
 	{
 		fstream file;
@@ -11,12 +12,12 @@ PSParser::PSParser(string f)
 
 		//get rid of first part
 		const string startString = "%%%BEGIN";
-		int pos = fileContents.find_first_of(startString);
+		int pos = fileContents.find(startString);
 		if (pos == -1)
 		{
 			throw 20;
 		}
-		fileContents.erase(pos, startString.size() );
+		fileContents.erase(0, pos+startString.size() );
 
 		//erase end part
 		const string endString = "%%%END";
@@ -26,6 +27,9 @@ PSParser::PSParser(string f)
 			throw 20;
 		}
 		fileContents.erase(pos, fileContents.size());
+		string splitters = "\n\ ";
+		Tokenize(splitters);
+
 	}
 	catch (exception ex)
 	{
@@ -62,13 +66,17 @@ void PSParser::MakeStringLower(string * str)
 ZImage * PSParser::ParseLines()
 {
 	ZImage* image = new ZImage();
-	for (int i = 0; i < tokens.size(); i++)
+
+	try
 	{
-		if (tokens[i].compare("line") == 0)
+		ZPoint* curPoint = NULL;
+		ZPolygon* curPolygon = NULL;
+
+		for (int i = 0; i < tokens.size(); i++)
 		{
-			//we've found a line and expect previous statements to be numbers
-			try
+			if (tokens[i].compare("line") == 0)
 			{
+				//we've found a line and expect previous statements to be numbers
 				//format of line is:
 				//x1 y1 x2 y2 LINE
 				//so use previous tokens
@@ -82,11 +90,36 @@ ZImage * PSParser::ParseLines()
 				ZLine * newLine = new ZLine(*lower, *upper);
 				image->AddLine(*newLine);
 			}
-			catch (exception ex)
+			else if (tokens[i].compare("moveto") == 0 || tokens[i].compare("lineto") == 0)
 			{
-				cerr << ex.what() << endl;
+				//format of line is:
+				//x y moveto/lineto
+
+				int x = stoi(tokens[i - 2]);
+				int y = stoi(tokens[i - 1]);
+				//set the line to draw from
+				curPoint = new ZPoint(x, y);
+				if (tokens[i].compare("moveto")==0)
+				{
+					//create new polygon
+					curPolygon = new ZPolygon();
+				}
+				else
+				{
+					curPolygon->AddPoint(*curPoint);
+				}
+			}
+			else if (tokens[i].compare("stroke") == 0)
+			{
+				image->AddPolygon(*curPolygon);
+				curPolygon = NULL;
 			}
 		}
 	}
+	catch (exception ex)
+	{
+		cerr << ex.what() << endl;
+	}
+
 	return image;
 }

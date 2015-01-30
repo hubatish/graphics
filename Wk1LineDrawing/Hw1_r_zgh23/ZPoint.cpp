@@ -43,6 +43,25 @@ ZLine::~ZLine()
 {
 }
 
+void ZLine::Translate(ZPoint point)
+{
+	startPoint.Translate(point);
+	endPoint.Translate(point);
+}
+
+void ZLine::Scale(float scaleFactor)
+{
+	startPoint.Scale(scaleFactor);
+	endPoint.Scale(scaleFactor);
+}
+
+void ZLine::Rotate(float angle)
+{
+	startPoint.Rotate(angle);
+	endPoint.Rotate(angle);
+}
+
+
 float ZLine::GetSlope()
 {
 	//returns slope, with bad compromise of returning max int in case of infinite slope (could maybe return INFINITY instead)
@@ -57,12 +76,55 @@ float ZLine::GetSlope()
 	}
 }
 
+ZPolygon::ZPolygon()
+{
+	//points = new vector<ZPoint>();
+}
+
+ZPolygon::~ZPolygon()
+{
+}
+
+void ZPolygon::AddPoint(ZPoint point)
+{
+	points.push_back(point);
+}
+
+void ZPolygon::Translate(ZPoint point)
+{
+	for (int i = 0; i < points.size(); i++)
+	{
+		points[i].Translate(point);
+	}
+}
+
+void ZPolygon::Scale(float scaleFactor)
+{
+	for (int i = 0; i < points.size(); i++)
+	{
+		points[i].Scale(scaleFactor);
+	}
+}
+
+void ZPolygon::Rotate(float angle)
+{
+	for (int i = 0; i < points.size(); i++)
+	{
+		points[i].Rotate(angle);
+	}
+}
+
 ZImage::ZImage()
 {
 }
 
 ZImage::~ZImage()
 {
+}
+
+void ZImage::AddPolygon(ZPolygon polygon)
+{
+	polygons.push_back(polygon);
 }
 
 void ZImage::AddLine(ZLine line)
@@ -74,10 +136,11 @@ void ZImage::Scale(float f)
 {
 	for (int i = 0; i < lines.size(); i++)
 	{
-		lines[i].startPoint.x *= f;
-		lines[i].startPoint.y *= f;
-		lines[i].endPoint.y *= f;
-		lines[i].endPoint.x *= f;
+		lines[i].Scale(f);
+	}
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		polygons[i].Scale(f);
 	}
 }
 
@@ -85,8 +148,11 @@ void ZImage::Translate(ZPoint point)
 {
 	for (int i = 0; i < lines.size(); i++)
 	{
-		lines[i].startPoint.Translate(point);
-		lines[i].endPoint.Translate(point);
+		lines[i].Translate(point);
+	}
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		polygons[i].Translate(point);
 	}
 }
 
@@ -95,7 +161,10 @@ void ZImage::Rotate(float angle)
 {
 	for (int i = 0; i < lines.size(); i++)
 	{
-		lines[i].startPoint.Rotate(angle);
-		lines[i].endPoint.Rotate(angle);
+		lines[i].Rotate(angle);
+	}
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		polygons[i].Rotate(angle);
 	}
 }

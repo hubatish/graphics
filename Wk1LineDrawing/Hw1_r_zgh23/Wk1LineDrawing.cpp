@@ -12,7 +12,7 @@ void TestTranslations(ZImage& image);
 int main(int argc, char* argv[])
 {
 	//argument things
-	string fileName = "hw1.ps";
+	string fileName = "hw2/hw2_c.ps";
 	ZPoint * lowerBound = NULL;
 	ZPoint * upperBound = NULL;
 	float* scale = NULL;
@@ -78,9 +78,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	lowerBound = new ZPoint(150, 0);
+
 	PSParser parser = PSParser(fileName);
-	string splitters = "\n\ ";
-	parser.Tokenize(splitters);
 
 	ZImage * image = parser.ParseLines();
 
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&cout);
+	xpm.Output(&fout);
 
 	return 0;
 }
