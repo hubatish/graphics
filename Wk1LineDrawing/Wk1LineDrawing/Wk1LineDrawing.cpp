@@ -15,10 +15,10 @@ int main(int argc, char* argv[])
 	string fileName = "hw2/hw2_c.ps";
 	ZPoint * lowerBound = NULL;
 	ZPoint * upperBound = NULL;
-	float* scale = NULL;
-	float* degreeAngle = NULL;
-	float* translateX = NULL;
-	float* translateY = NULL;
+	float scale = 1.0;
+	float degreeAngle = 0;
+	float translateX = 0;
+	float translateY = 0;
 
 	//Parse command line arguments
 	for (int i = 0; i < argc - 1; i += 2)
@@ -62,43 +62,41 @@ int main(int argc, char* argv[])
 		}
 		else if ("-s" == argv[i])
 		{
-			*scale = stoi(argv[i + 1]);
+			scale = stoi(argv[i + 1]);
 		}
 		else if ("-r" == argv[i])
 		{
-			*degreeAngle = stoi(argv[i + 1]);
+			degreeAngle = stoi(argv[i + 1]);
 		}
 		else if ("-m" == argv[i])
 		{
-			*translateX = stoi(argv[i + 1]);
+			translateX = stoi(argv[i + 1]);
 		}
 		else if ("-n" == argv[i])
 		{
-			*translateY = stoi(argv[i + 1]);
+			translateY = stoi(argv[i + 1]);
 		}
 	}
-
-	lowerBound = new ZPoint(150, 0);
 
 	PSParser parser = PSParser(fileName);
 
 	ZImage * image = parser.ParseLines();
 
-	if (scale != NULL)
+	if (scale != 1.0)
 	{
-		image->Scale(*scale);
+		image->Scale(scale);
 	}
-	if (degreeAngle != NULL)
+	if (degreeAngle != 0)
 	{
-		image->Rotate(*degreeAngle);
+		image->Rotate(degreeAngle);
 	}
-	if (translateX != NULL)
+	if (translateX != 0)
 	{
-		image->Translate(ZPoint(*translateX,0));
+		image->Translate(ZPoint(translateX,0));
 	}
-	if (translateY != NULL)
+	if (translateY != 0)
 	{
-		image->Translate(ZPoint(0, *translateY));
+		image->Translate(ZPoint(0, translateY));
 	}
 
 	XPMOutput xpm(lowerBound,upperBound);
@@ -108,7 +106,7 @@ int main(int argc, char* argv[])
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&fout);
+	xpm.Output(&cout);
 
 	return 0;
 }
