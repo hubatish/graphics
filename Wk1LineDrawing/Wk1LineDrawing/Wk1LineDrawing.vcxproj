@@ -85,8 +85,8 @@
     <ClInclude Include="ZPoint.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DrawingMain.cpp" />
     <ClCompile Include="PSParser.cpp" />
-    <ClCompile Include="Wk1LineDrawing.cpp" />
     <ClCompile Include="XPMOutput.cpp" />
     <ClCompile Include="ZPoint.cpp" />
   </ItemGroup>
