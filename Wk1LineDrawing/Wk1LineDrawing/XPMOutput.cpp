@@ -252,7 +252,7 @@ bool XPMOutput::ClipLine(ZLine& line)
 }
 
 //Implement Sutherland - Hodgeman algorithm
-ZPolygon * XPMOutput::ClipPolygon(ZPolygon & polygon)
+ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 {
 	if (polygon.points.size() < 2)
 	{
@@ -273,48 +273,46 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon & polygon)
 	//for (int edge = 0; edge < 4; edge++)
 	{
 		int pSize = polygon.points.size();
-		for (int i = pSize -1; i >=0; i--)
+		for (int i = 0; i <pSize; i++)
 		{
 			//Process based on whether this point and adjacent points are inside
 			ZPoint * prevPoint;
 			int prevLocation;
-			if (i == pSize-1)
+			if (i == 0)
 			{
 				//first point wraps around to last
-				prevLocation = 0;
+				prevLocation = pSize - 1;
 			}
 			else
 			{
-				prevLocation = i + 1;
+				prevLocation = i - 1;
 			}
 			prevPoint = &polygon.points[prevLocation];
 
 			//handle cases for all the edges
 			if (pointsAreIn[i] == bitset<4>(0))
 			{
-				/*if (pointsAreIn[prevLocation] == bitset<4>(0))
-				{
-					//both points are in, add this point!
-					newPolygon->AddPoint(polygon.points[i]);
-				}
-				else
-				{
-					//previous point not in... need to find intersection point
-					newPolygon->AddPoint(ClipPoint(*prevPoint, ZLine(*prevPoint, polygon.points[i])));
-				}*/
+				//this point is in
 				if (pointsAreIn[prevLocation] != bitset<4>())
 				{
 					//previous point not in... need to find intersection point
-					newPolygon->AddPoint(ClipPoint(*prevPoint, ZLine(*prevPoint, polygon.points[i])));
+					ZPoint * newPoint = & ClipPoint(*prevPoint, ZLine(*prevPoint, polygon.points[i]));
+					newPolygon->AddPoint(*newPoint);
+					polygon.points[prevLocation] = ZPoint(newPoint->x,newPoint->y);
+					pointsAreIn[prevLocation] = bitset<4>(0);
 				}
 				newPolygon->AddPoint(polygon.points[i]);
 			}
 			else
 			{
+				//this point is out
 				if (pointsAreIn[prevLocation] == bitset<4>(0))
 				{
 					//previous point in.. need to find interesection point
-					newPolygon->AddPoint(ClipPoint(polygon.points[i], ZLine(*prevPoint, polygon.points[i])));
+					ZPoint * newPoint = &ClipPoint(polygon.points[i], ZLine(*prevPoint, polygon.points[i]));
+					newPolygon->AddPoint(*newPoint);
+					polygon.points[i] = ZPoint(newPoint->x, newPoint->y);
+					pointsAreIn[i] = bitset<4>(0);
 				}
 				//else do nothing, both points are out
 			}
