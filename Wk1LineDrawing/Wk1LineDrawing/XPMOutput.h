@@ -31,8 +31,8 @@ public:
 	XPMOutput(ZPoint* lowerBound = NULL, ZPoint* upperBound = NULL);
 	~XPMOutput();
 	void Output(ostream *out);
-	int GetWidth(){ return (upperBound.x - lowerBound.x); }
-	int GetHeight() { return (upperBound.y - lowerBound.y); }
+	int GetWidth(){ return (upperBound.x - lowerBound.x+1); }
+	int GetHeight() { return (upperBound.y - lowerBound.y+1); }
 
 	void DrawLine(ZLine line, Color color);
 	void DrawPoint(ZPoint point, Color color);

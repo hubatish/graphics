@@ -30,11 +30,11 @@ XPMOutput::XPMOutput(ZPoint* lowerBound, ZPoint * upperBound)
 	int height = GetHeight();
 	
 	//initialize the grid to white
-	grid.resize(width+1);
-	for (int i = 0; i <= width; i++)
+	grid.resize(width);
+	for (int i = 0; i < width; i++)
 	{
-		grid[i].resize(height+1);
-		for (int j = 0; j <= height; j++)
+		grid[i].resize(height);
+		for (int j = 0; j < height; j++)
 		{
 			grid[i][j] = Color::WHITE;
 		}
@@ -57,10 +57,10 @@ void XPMOutput::Output(ostream* out)
 	*out << "\"" << static_cast<char>(Color::BLACK) << " c #000000\"," << endl;
 	*out << "\"" << static_cast<char>(Color::WHITE) << " c #ffffff\"," << endl;
 	*out << "/* pixels */" << endl;
-	for (int y = height; y >=0; y--)
+	for (int y = height-1; y >=0; y--)
 	{
 		*out << "\"";
-		for (int x = 0; x <= width; x++)
+		for (int x = 0; x < width; x++)
 		{
 			*out << static_cast<char>(grid[x][y]);
 		}
@@ -280,6 +280,7 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 	{
 		pointsAreIn.push_back(GetCohenSutherlandOutcode(polygon.points[i]));
 	}
+	pointsAreIn.resize(pointsAreIn.size() * 3);
 
 	vector<ZLine> lines;
 	ZLine hLine = ZLine(ZPoint(lowerBound.x, 0), ZPoint(upperBound.x, 0));
@@ -321,8 +322,6 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 					//previous point not in... need to find intersection point
 					ZPoint * newPoint = new ZPoint( ClipPoint(*prevPoint, ZLine(*prevPoint, *curPoint),edge) );
 					newPolygon->AddPoint(*newPoint);
-					//polygon.points[prevLocation] = ZPoint(newPoint->x,newPoint->y);
-					//pointsAreIn[prevLocation] = bitset<4>(0);
 				}
 				newPolygon->AddPoint(*curPoint);
 			}
@@ -334,8 +333,6 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 					//previous point in.. need to find interesection point
 					ZPoint * newPoint =  new ZPoint( ClipPoint(*curPoint, ZLine(*prevPoint, *curPoint),edge) );
 					newPolygon->AddPoint(*newPoint);
-					//polygon.points[i] = ZPoint(newPoint->x, newPoint->y);
-					//pointsAreIn[i] = bitset<4>(0);
 				}
 				//else do nothing, both points are out
 			}	
