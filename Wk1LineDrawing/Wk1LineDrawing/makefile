@@ -1,4 +1,4 @@
 .PHONY: build
 build:
-	g++ -std=c++0x -o CG_hw1 ZPoint.cpp XPMOutput.cpp PSParser.cpp DrawingMain.cpp
+	g++ -w -std=c++0x -o CG_hw2 ZPoint.cpp XPMOutput.cpp PSParser.cpp DrawingMain.cpp
 

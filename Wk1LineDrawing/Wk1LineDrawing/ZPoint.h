@@ -12,6 +12,7 @@ class ZPoint
 public:
 	ZPoint(int x, int y);
 	ZPoint();
+	ZPoint(const ZPoint & p);
 	~ZPoint();
 
 	void Translate(ZPoint point) { x += point.x; y += point.y; }

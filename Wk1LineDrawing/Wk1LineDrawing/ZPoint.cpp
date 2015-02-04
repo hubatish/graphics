@@ -7,6 +7,12 @@ ZPoint::ZPoint(int x, int y)
 	this->y = y;
 }
 
+ZPoint::ZPoint(const ZPoint & p)
+{
+	x = p.x;
+	y = p.y;
+}
+
 ZPoint::ZPoint()
 {
 	x = 0;

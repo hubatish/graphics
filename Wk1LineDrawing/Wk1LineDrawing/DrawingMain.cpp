@@ -78,9 +78,6 @@ int main(int argc, char* argv[])
 			translateY = stof(argv[i + 1]);
 		}
 	}
-	fileName = "hw2/hw2_a.ps";
-	translateX = -250;
-	translateY = -200;
 
 	PSParser parser = PSParser(fileName);
 
@@ -110,7 +107,7 @@ int main(int argc, char* argv[])
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&fout);
+	xpm.Output(&cout);
 
 	return 0;
 }

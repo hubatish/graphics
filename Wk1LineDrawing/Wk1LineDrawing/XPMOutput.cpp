@@ -319,7 +319,7 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 				if (pointsAreIn[prevLocation][edge] != false)
 				{
 					//previous point not in... need to find intersection point
-					ZPoint * newPoint = & ClipPoint(*prevPoint, ZLine(*prevPoint, *curPoint),edge);
+					ZPoint * newPoint = new ZPoint( ClipPoint(*prevPoint, ZLine(*prevPoint, *curPoint),edge) );
 					newPolygon->AddPoint(*newPoint);
 					//polygon.points[prevLocation] = ZPoint(newPoint->x,newPoint->y);
 					//pointsAreIn[prevLocation] = bitset<4>(0);
@@ -332,7 +332,7 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 				if (pointsAreIn[prevLocation][edge] == false)
 				{
 					//previous point in.. need to find interesection point
-					ZPoint * newPoint = &ClipPoint(*curPoint, ZLine(*prevPoint, *curPoint),edge);
+					ZPoint * newPoint =  new ZPoint( ClipPoint(*curPoint, ZLine(*prevPoint, *curPoint),edge) );
 					newPolygon->AddPoint(*newPoint);
 					//polygon.points[i] = ZPoint(newPoint->x, newPoint->y);
 					//pointsAreIn[i] = bitset<4>(0);
