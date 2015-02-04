@@ -42,7 +42,7 @@ public:
 	//help with line clipping algorithm
 	bool ClipLine(ZLine & line);
 	ZPolygon* ClipPolygon(ZPolygon polygon);
-	ZPoint ClipPoint(ZPoint point, ZLine line);
+	ZPoint ClipPoint(ZPoint point, ZLine line, int onlyEdge = -1);
 
 	void OffsetPoint(ZPoint & point){ point.Translate(negLowerBound); }
 };

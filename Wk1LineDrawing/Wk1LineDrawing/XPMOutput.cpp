@@ -166,44 +166,58 @@ bitset<4> XPMOutput::GetCohenSutherlandOutcode(ZPoint point)
 {
 	//point is in any several quadrants defined by bitwise arithmetic
 	bitset<4> code = 0;
-	code[0] = (point.x < lowerBound.x); //bottom
-	code[1] = (point.x > upperBound.x); //top
-	code[2] = (point.y < lowerBound.y); //left
-	code[3] = (point.y > upperBound.y); //right
+	code[0] = (point.x < lowerBound.x); //off left?
+	code[1] = (point.x > upperBound.x); //off right?
+	code[2] = (point.y < lowerBound.y); //off bottom?
+	code[3] = (point.y > upperBound.y); //off top?
 	return code;
 }
 
 //Clip the point passed in so it's now within bounds
 //Move x & y so that they're in bounds, and move the other value so it matches with slope
-ZPoint XPMOutput::ClipPoint(ZPoint point, ZLine line)
+ZPoint XPMOutput::ClipPoint(ZPoint point, ZLine line, int onlyEdge)
 {
 	ZPoint newPoint = point;
-	if (point.x < lowerBound.x)
+	float dx = line.endPoint.x - line.startPoint.x;
+	if (point.x < lowerBound.x && (onlyEdge == -1 || onlyEdge == 0))
 	{
 		//left
-		newPoint.y = line.startPoint.y + (line.endPoint.y - line.startPoint.y)
-						* (lowerBound.x - line.startPoint.x) / (line.endPoint.x - line.startPoint.x);
+		if (dx != 0)
+		{
+			newPoint.y = line.startPoint.y + (line.endPoint.y - line.startPoint.y)
+				* (lowerBound.x - line.startPoint.x) / (line.endPoint.x - line.startPoint.x);
+		}
 		newPoint.x = lowerBound.x;
 	}
-	else if (point.x > upperBound.x)
+	else if (point.x > upperBound.x && (onlyEdge == -1 || onlyEdge == 1))
 	{
 		//right
-		newPoint.y = line.startPoint.y + (line.endPoint.y - line.startPoint.y) 
-						* (upperBound.x - line.startPoint.x) / (line.endPoint.x - line.startPoint.x);
+		if (dx != 0)
+		{
+			newPoint.y = line.startPoint.y + (line.endPoint.y - line.startPoint.y)
+				* (upperBound.x - line.startPoint.x) / (line.endPoint.x - line.startPoint.x);
+		}
 		newPoint.x = upperBound.x;
 	}
-	if (newPoint.y < lowerBound.y)
+	float dy = line.endPoint.y - line.startPoint.y;
+	if (newPoint.y < lowerBound.y && (onlyEdge == -1 || onlyEdge == 2))
 	{
 		//bottom
-		newPoint.x = line.startPoint.x + (line.endPoint.x - line.startPoint.x)
-			* (lowerBound.y - line.startPoint.y) / (line.endPoint.y - line.startPoint.y);
+		if (dy != 0)
+		{
+			newPoint.x = line.startPoint.x + (line.endPoint.x - line.startPoint.x)
+				* (lowerBound.y - line.startPoint.y) / (line.endPoint.y - line.startPoint.y);
+		}
 		newPoint.y = lowerBound.y;
 	}
-	else if (newPoint.y > upperBound.y)
+	else if (newPoint.y > upperBound.y && (onlyEdge == -1 || onlyEdge == 3))
 	{
-		//bottom
-		newPoint.x = line.startPoint.x + (line.endPoint.x - line.startPoint.x)
-			* (upperBound.y - line.startPoint.y) / (line.endPoint.y - line.startPoint.y);
+		//top
+		if (dy != 0)
+		{
+			newPoint.x = line.startPoint.x + (line.endPoint.x - line.startPoint.x)
+				* (upperBound.y - line.startPoint.y) / (line.endPoint.y - line.startPoint.y);
+		}
 		newPoint.y = upperBound.y;
 	}
 
@@ -267,16 +281,24 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 		pointsAreIn.push_back(GetCohenSutherlandOutcode(polygon.points[i]));
 	}
 
-	ZPolygon* newPolygon = new ZPolygon();
+	vector<ZLine> lines;
+	ZLine hLine = ZLine(ZPoint(lowerBound.x, 0), ZPoint(upperBound.x, 0));
+	lines.push_back(hLine);
+
+	ZPolygon* newPolygon;
+	ZPolygon* prevPolygon = &polygon;
 
 	//go through each edge
-	//for (int edge = 0; edge < 4; edge++)
+	for (int edge = 0; edge < 4; edge++)
 	{
-		int pSize = polygon.points.size();
+		newPolygon = new ZPolygon();
+
+		int pSize = prevPolygon->points.size();
 		for (int i = 0; i <pSize; i++)
 		{
 			//Process based on whether this point and adjacent points are inside
 			ZPoint * prevPoint;
+			ZPoint * curPoint;
 			int prevLocation;
 			if (i == 0)
 			{
@@ -287,36 +309,42 @@ ZPolygon * XPMOutput::ClipPolygon(ZPolygon polygon)
 			{
 				prevLocation = i - 1;
 			}
-			prevPoint = &polygon.points[prevLocation];
+			prevPoint = &prevPolygon->points[prevLocation];
+			curPoint = &prevPolygon->points[i];
 
 			//handle cases for all the edges
-			if (pointsAreIn[i] == bitset<4>(0))
+			if (pointsAreIn[i][edge] == false)
 			{
 				//this point is in
-				if (pointsAreIn[prevLocation] != bitset<4>())
+				if (pointsAreIn[prevLocation][edge] != false)
 				{
 					//previous point not in... need to find intersection point
-					ZPoint * newPoint = & ClipPoint(*prevPoint, ZLine(*prevPoint, polygon.points[i]));
+					ZPoint * newPoint = & ClipPoint(*prevPoint, ZLine(*prevPoint, *curPoint),edge);
 					newPolygon->AddPoint(*newPoint);
-					polygon.points[prevLocation] = ZPoint(newPoint->x,newPoint->y);
-					pointsAreIn[prevLocation] = bitset<4>(0);
+					//polygon.points[prevLocation] = ZPoint(newPoint->x,newPoint->y);
+					//pointsAreIn[prevLocation] = bitset<4>(0);
 				}
-				newPolygon->AddPoint(polygon.points[i]);
+				newPolygon->AddPoint(*curPoint);
 			}
 			else
 			{
 				//this point is out
-				if (pointsAreIn[prevLocation] == bitset<4>(0))
+				if (pointsAreIn[prevLocation][edge] == false)
 				{
 					//previous point in.. need to find interesection point
-					ZPoint * newPoint = &ClipPoint(polygon.points[i], ZLine(*prevPoint, polygon.points[i]));
+					ZPoint * newPoint = &ClipPoint(*curPoint, ZLine(*prevPoint, *curPoint),edge);
 					newPolygon->AddPoint(*newPoint);
-					polygon.points[i] = ZPoint(newPoint->x, newPoint->y);
-					pointsAreIn[i] = bitset<4>(0);
+					//polygon.points[i] = ZPoint(newPoint->x, newPoint->y);
+					//pointsAreIn[i] = bitset<4>(0);
 				}
 				//else do nothing, both points are out
-			}
-
+			}	
+		}
+		prevPolygon = newPolygon;
+		//the polygon rotated so we have to redo the codes... means this is really inefficient
+		for (int i = 0; i < prevPolygon->points.size(); i++)
+		{
+			pointsAreIn[i] = GetCohenSutherlandOutcode(prevPolygon->points[i]);
 		}
 	}
 	return newPolygon;
