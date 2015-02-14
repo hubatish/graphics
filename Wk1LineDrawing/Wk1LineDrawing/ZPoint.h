@@ -18,6 +18,7 @@ public:
 	void Translate(ZPoint point) { x += point.x; y += point.y; }
 	void Scale(float f) { x *= f; y *= f; }
 	void Rotate(float degreeAngle);
+
 	int x, y;
 };
 

@@ -100,14 +100,14 @@ int main(int argc, char* argv[])
 		image->Translate(ZPoint(0, translateY));
 	}
 
-	XPMOutput xpm(lowerBound,upperBound);
+	XPMOutput xpm(new ZRect(lowerBound,upperBound));
 
 	TestLineDraws(xpm);
 	xpm.DrawImage(*image, Color::BLACK);
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&cout);
+	xpm.Output(&fout);
 
 	return 0;
 }

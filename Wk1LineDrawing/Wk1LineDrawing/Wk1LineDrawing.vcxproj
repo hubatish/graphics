@@ -83,12 +83,14 @@
     <ClInclude Include="PSParser.h" />
     <ClInclude Include="XPMOutput.h" />
     <ClInclude Include="ZPoint.h" />
+    <ClInclude Include="ZRect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DrawingMain.cpp" />
     <ClCompile Include="PSParser.cpp" />
     <ClCompile Include="XPMOutput.cpp" />
     <ClCompile Include="ZPoint.cpp" />
+    <ClCompile Include="ZRect.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
