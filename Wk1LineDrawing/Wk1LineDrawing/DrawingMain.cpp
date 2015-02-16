@@ -100,10 +100,12 @@ int main(int argc, char* argv[])
 		image->Translate(ZPoint(0, translateY));
 	}
 
+	BoundedImage imageInWorld(image, new ZRect(lowerBound, upperBound));
+	BoundedImage * imageInWindow = imageInWorld.FitToViewort(ZRect(lowerBound, upperBound));
+
 	XPMOutput xpm(new ZRect(lowerBound,upperBound));
 
-	TestLineDraws(xpm);
-	xpm.DrawImage(*image, Color::BLACK);
+	xpm.DrawImage(imageInWindow->image, Color::BLACK);
 
 	ofstream fout;
 	fout.open("out.xpm");

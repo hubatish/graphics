@@ -39,6 +39,12 @@ ZLine::ZLine(ZPoint start, ZPoint end)
 	this->endPoint = end;
 }
 
+ZLine::ZLine(const ZLine & l)
+{
+	startPoint = ZPoint(l.startPoint);
+	endPoint = ZPoint(l.endPoint);
+}
+
 ZLine::ZLine()
 {
 	startPoint = ZPoint();
@@ -87,6 +93,11 @@ ZPolygon::ZPolygon()
 	//points = new vector<ZPoint>();
 }
 
+ZPolygon::ZPolygon(const ZPolygon & p)
+{
+	points = p.points;
+}
+
 ZPolygon::~ZPolygon()
 {
 }
@@ -122,6 +133,12 @@ void ZPolygon::Rotate(float angle)
 
 ZImage::ZImage()
 {
+}
+
+ZImage::ZImage(const ZImage & image)
+{
+	lines = image.lines;
+	polygons = image.polygons;
 }
 
 ZImage::~ZImage()

@@ -74,13 +74,6 @@ void XPMOutput::DrawPoint(ZPoint point, Color color)
 ///While loop algorithm pseudo code from here: http://ocw.unican.es/ensenanzas-tecnicas/visualizacion-e-interaccion-grafica/material-de-clase-2/03-LineAlgorithms.pdf
 void XPMOutput::DrawLine(ZLine line, Color color)
 {
-	//Clip the line before drawing it
-	if (!bounds.ClipLine(line))
-	{
-		//the line is not in bounds, don't bother drawing it
-		return;
-	}
-
 	//DDA line drawing algorithm
 	float m = line.GetSlope();
 	
@@ -157,12 +150,51 @@ void XPMOutput::DrawPolygon(ZPolygon & polygon, Color color)
 	{
 		return;
 	}
-	ZPolygon * clippedPoly = bounds.ClipPolygon(polygon);
-	ZPoint * prev = &clippedPoly->points[clippedPoly->points.size()-1];
-	for (int i = 0; i < clippedPoly->points.size(); i++)
+	ZPoint * prev = &polygon.points[polygon.points.size()-1];
+	for (int i = 0; i < polygon.points.size(); i++)
 	{
-		DrawLine(ZLine(clippedPoly->points[i], *prev), color);
-		prev = &clippedPoly->points[i];
+		DrawLine(ZLine(polygon.points[i], *prev), color);
+		prev = &polygon.points[i];
+	}
+}
+
+void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
+{
+	//Create intersectingLines map - which edges intersect a scan line
+	map<int,vector<ZLine>> intersectingLines;
+	ZPoint * prev = &polygon.points[polygon.points.size() - 1];
+	for (int i = 0; i < polygon.points.size(); i++)
+	{
+		ZLine curEdge = ZLine(*prev, polygon.points[i]);
+		int yMin, yMax;
+		yMin = min(curEdge.startPoint.y, curEdge.endPoint.y);
+		yMax = max(curEdge.startPoint.y, curEdge.endPoint.y);
+		//add this edge to all applicable scan lines
+		for (int curY = yMin; curY < yMax;curY++)
+		{
+			intersectingLines[curY].push_back(curEdge);
+		}
+		prev = &polygon.points[i];
+	}
+
+	//actually find intersections & draw lines
+	for (auto iter : intersectingLines)
+	{
+		vector<ZLine> lines = iter.second;
+		vector<int> intersectionXs;
+		for (auto line : lines)
+		{
+			float reverseM = ((float)line.endPoint.y - (float)line.startPoint.y) / ((float)line.endPoint.x - (float)line.startPoint.x);
+			float curY = (float) iter.first;
+			int curX = line.startPoint.x + reverseM * (float)(curY - (float)line.startPoint.y);
+			intersectionXs.push_back(curX);
+		}
+		//sort the xs
+		sort(intersectionXs.begin(), intersectionXs.end());
+		for (auto x : intersectionXs)
+		{
+
+		}
 	}
 }
 
@@ -177,3 +209,4 @@ void XPMOutput::DrawImage(ZImage & image, Color color)
 		DrawPolygon(image.polygons[i], color);
 	}
 }
+

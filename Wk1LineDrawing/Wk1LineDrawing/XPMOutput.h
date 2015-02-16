@@ -11,6 +11,7 @@
 #include <map>
 #include <cmath>
 #include <bitset>
+#include <algorithm>
 using namespace std;
 
 enum class Color : char { BLACK = 'B', WHITE = 'W' };
@@ -36,6 +37,7 @@ public:
 	void DrawLine(ZLine line, Color color);
 	void DrawPoint(ZPoint point, Color color);
 	void DrawPolygon(ZPolygon & polygon, Color color);
+	void FillPolygon(ZPolygon & polygon, Color color);
 	void DrawImage(ZImage & image, Color color);
 
 	void OffsetPoint(ZPoint & point){ point.Translate(negLowerBound); }

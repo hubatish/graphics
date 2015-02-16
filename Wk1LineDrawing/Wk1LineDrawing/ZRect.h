@@ -20,13 +20,28 @@ public:
 	ZRect(ZPoint* lowerBound = NULL, ZPoint* upperBound = NULL);
 	~ZRect();
 
-	int GetWidth(){ return (upperBound.x - lowerBound.x + 1); }
-	int GetHeight() { return (upperBound.y - lowerBound.y + 1); }
+	float GetWidth(){ return (upperBound.x - lowerBound.x + 1.0); }
+	float GetHeight() { return (upperBound.y - lowerBound.y + 1.0); }
 
 	//help with line clipping algorithm
 	bool ClipLine(ZLine & line);
 	ZPolygon* ClipPolygon(ZPolygon polygon);
 	ZPoint ClipPoint(ZPoint point, ZLine line, int onlyEdge = -1);
+	void ClipImage(ZImage & image);
+};
+
+class BoundedImage
+{
+public:
+	BoundedImage(ZImage * image, ZRect * rect = NULL);
+	~BoundedImage();
+
+	ZRect bounds;
+	ZImage image;
+
+	void ClipImage(){ bounds.ClipImage(image); };
+
+	BoundedImage * FitToViewort(ZRect & view);
 };
 
 #endif

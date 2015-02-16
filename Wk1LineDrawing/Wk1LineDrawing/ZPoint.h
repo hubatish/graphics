@@ -27,6 +27,7 @@ class ZLine
 public:
 	ZLine(ZPoint start, ZPoint end);
 	ZLine();
+	ZLine(const ZLine & l);
 	~ZLine();
 
 	float GetSlope();
@@ -40,6 +41,7 @@ class ZPolygon
 {
 public:
 	ZPolygon();
+	ZPolygon(const ZPolygon & p);
 	~ZPolygon();
 
 	vector<ZPoint> points;
@@ -54,6 +56,7 @@ class ZImage
 {
 public:
 	ZImage();
+	ZImage(const ZImage & image);
 	~ZImage();
 
 	void AddLine(ZLine line);

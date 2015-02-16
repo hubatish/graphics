@@ -1,6 +1,5 @@
 #include "ZRect.h"
 
-
 ZRect::ZRect(ZPoint* lowerBound, ZPoint * upperBound)
 {
 	//handle optional arguments
@@ -212,3 +211,52 @@ ZPolygon * ZRect::ClipPolygon(ZPolygon polygon)
 	return newPolygon;
 }
 
+void ZRect::ClipImage(ZImage & image)
+{
+	for (int i = image.lines.size()-1; i >=0; i--)
+	{
+		if (!ClipLine(image.lines[i]))
+		{
+			image.lines.erase(image.lines.begin()+i);
+		}
+	}
+
+	for (int i = image.polygons.size() - 1; i >= 0; i--)
+	{
+		image.polygons[i] = *ClipPolygon(image.polygons[i]);
+	}
+
+}
+
+BoundedImage::BoundedImage(ZImage* image, ZRect * rect)
+{
+	//handle optional arguments
+	if (rect == NULL)
+	{
+		rect = new ZRect();
+	}
+	bounds = *rect;
+	this->image = *image;
+	bounds.ClipImage(*image);
+}
+
+BoundedImage::~BoundedImage()
+{
+}
+
+//Take the current rectangle as positions in the world
+//And transform it so it fits into the viewport in window
+BoundedImage * BoundedImage::FitToViewort(ZRect & view)
+{
+	//scale and fit the bounds & image to fit into the view
+	float toScale = view.GetWidth() / bounds.GetWidth();
+	ZPoint toOrigin = bounds.lowerBound;
+	ZPoint toView = view.lowerBound;
+	ZImage * newImage = new ZImage(image);
+	toOrigin.Scale(-1);
+	newImage->Translate(toOrigin);
+	newImage->Scale(toScale);
+	newImage->Translate(toView);
+	BoundedImage * imageInView = new BoundedImage(newImage,&view);
+	return imageInView;
+}
