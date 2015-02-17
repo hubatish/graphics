@@ -17,6 +17,7 @@ public:
 
 	void Translate(ZPoint point) { x += point.x; y += point.y; }
 	void Scale(float f) { x *= f; y *= f; }
+	void Scale(ZPoint scaleFactor);
 	void Rotate(float degreeAngle);
 
 	int x, y;
@@ -38,6 +39,7 @@ public:
 	ZPoint startPoint, endPoint;
 	void Translate(ZPoint point);
 	void Scale(float scaleFactor);
+	void Scale(ZPoint scaleFactor);
 	void Rotate(float angle);
 };
 
@@ -53,6 +55,7 @@ public:
 	void AddPoint(ZPoint point);
 	void Translate(ZPoint point);
 	void Scale(float scaleFactor);
+	void Scale(ZPoint scaleFactor);
 	void Rotate(float angle);
 };
 
@@ -70,6 +73,7 @@ public:
 	vector<ZPolygon> polygons;
 
 	void Scale(float f);
+	void Scale(ZPoint scaleFactor);
 	void Translate(ZPoint point);
 	void Rotate(float angle);
 	void Clip(ZPoint lower, ZPoint upper);

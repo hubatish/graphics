@@ -223,7 +223,15 @@ void ZRect::ClipImage(ZImage & image)
 
 	for (int i = image.polygons.size() - 1; i >= 0; i--)
 	{
-		image.polygons[i] = *ClipPolygon(image.polygons[i]);
+		ZPolygon * clippedPoly = ClipPolygon(image.polygons[i]);
+		if (clippedPoly->points.size() == 0)
+		{
+			image.polygons.erase(image.polygons.begin() + i);
+		}
+		else
+		{
+			image.polygons[i] = *clippedPoly;
+		}
 	}
 
 }
@@ -237,7 +245,7 @@ BoundedImage::BoundedImage(ZImage* image, ZRect * rect)
 	}
 	bounds = *rect;
 	this->image = *image;
-	bounds.ClipImage(*image);
+	bounds.ClipImage(this->image);
 }
 
 BoundedImage::~BoundedImage()
@@ -249,7 +257,10 @@ BoundedImage::~BoundedImage()
 BoundedImage * BoundedImage::FitToViewort(ZRect & view)
 {
 	//scale and fit the bounds & image to fit into the view
-	float toScale = view.GetWidth() / bounds.GetWidth();
+	ZPoint toScale;
+	//WARNING - THESE ARE INTS, CAUSES A PROBLEM1!!!!!!
+	toScale.x = view.GetWidth() / bounds.GetWidth();
+	toScale.y = view.GetHeight() / bounds.GetHeight();
 	ZPoint toOrigin = bounds.lowerBound;
 	ZPoint toView = view.lowerBound;
 	ZImage * newImage = new ZImage(image);

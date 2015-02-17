@@ -168,6 +168,12 @@ void XPMOutput::DrawPolygon(ZPolygon & polygon, Color color)
 
 void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 {
+	if (polygon.points.size() <= 0)
+	{
+		//don't process non-existant polygons
+		return;
+	}
+
 	//Create intersectingLines map - which edges intersect a scan line
 	map<int,vector<ZLine>> intersectingLines;
 	ZPoint * prev = &polygon.points[polygon.points.size() - 1];
