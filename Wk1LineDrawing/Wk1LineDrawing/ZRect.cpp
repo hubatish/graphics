@@ -257,16 +257,16 @@ BoundedImage::~BoundedImage()
 BoundedImage * BoundedImage::FitToViewort(ZRect & view)
 {
 	//scale and fit the bounds & image to fit into the view
-	ZPoint toScale;
+	float toScaleX, toScaleY;
 	//WARNING - THESE ARE INTS, CAUSES A PROBLEM1!!!!!!
-	toScale.x = view.GetWidth() / bounds.GetWidth();
-	toScale.y = view.GetHeight() / bounds.GetHeight();
+	toScaleX = view.GetWidth() / bounds.GetWidth();
+	toScaleY = view.GetHeight() / bounds.GetHeight();
 	ZPoint toOrigin = bounds.lowerBound;
 	ZPoint toView = view.lowerBound;
 	ZImage * newImage = new ZImage(image);
 	toOrigin.Scale(-1);
 	newImage->Translate(toOrigin);
-	newImage->Scale(toScale);
+	newImage->Scale(toScaleX,toScaleY);
 	newImage->Translate(toView);
 	BoundedImage * imageInView = new BoundedImage(newImage,&view);
 	return imageInView;

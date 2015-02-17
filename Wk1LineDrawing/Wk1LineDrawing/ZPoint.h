@@ -15,10 +15,10 @@ public:
 	ZPoint(const ZPoint & p);
 	~ZPoint();
 
-	static void TranslateP(ZPoint & point, ZPoint translation){ point.Translate(translation); }
+	static void TranslateP(ZPoint & point, ZPoint translation){ point.Translate(translation); } //static for application experiment
 	void Translate(ZPoint point) { x += point.x; y += point.y; }
 	void Scale(float f) { x *= f; y *= f; }
-	void Scale(ZPoint scaleFactor);
+	void Scale(float xScale, float yScale);
 	void Rotate(float degreeAngle);
 
 	int x, y;
@@ -40,7 +40,7 @@ public:
 	ZPoint startPoint, endPoint;
 	void Translate(ZPoint point);
 	void Scale(float scaleFactor);
-	void Scale(ZPoint scaleFactor);
+	void Scale(float xScale, float yScale);
 	void Rotate(float angle);
 };
 
@@ -53,17 +53,11 @@ public:
 
 	vector<ZPoint> points;
 
-	void ApplyFunction(void(*foo) (ZPoint &, ZPoint), ZPoint arg)
-	{
-		for (int i = 0; i < points.size(); i++)
-		{
-			foo(points[i], arg);
-		}
-	}
+	void ApplyFunction(void(*foo) (ZPoint &, ZPoint), ZPoint arg);
 	void AddPoint(ZPoint point);
 	void Translate(ZPoint point);
 	void Scale(float scaleFactor);
-	void Scale(ZPoint scaleFactor);
+	void Scale(float xScale, float yScale);
 	void Rotate(float angle);
 };
 
@@ -81,7 +75,7 @@ public:
 	vector<ZPolygon> polygons;
 
 	void Scale(float f);
-	void Scale(ZPoint scaleFactor);
+	void Scale(float xScale, float yScale);
 	void Translate(ZPoint point);
 	void Rotate(float angle);
 	void Clip(ZPoint lower, ZPoint upper);

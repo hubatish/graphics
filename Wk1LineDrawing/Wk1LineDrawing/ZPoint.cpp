@@ -33,9 +33,9 @@ void ZPoint::Rotate(float degreeAngle)
 	x = xNew;
 }
 
-void ZPoint::Scale(ZPoint scaleFactor)
+void ZPoint::Scale(float xScale, float yScale)
 { 
-	x *= scaleFactor.x; y *= scaleFactor.y; 
+	x *= xScale; y *= yScale; 
 }
 
 ZLine::ZLine(ZPoint start, ZPoint end)
@@ -72,10 +72,10 @@ void ZLine::Scale(float scaleFactor)
 	endPoint.Scale(scaleFactor);
 }
 
-void ZLine::Scale(ZPoint scaleFactor)
+void ZLine::Scale(float xScale, float yScale)
 {
-	startPoint.Scale(scaleFactor);
-	endPoint.Scale(scaleFactor);
+	startPoint.Scale(xScale,yScale);
+	endPoint.Scale(xScale, yScale);
 }
 
 void ZLine::Rotate(float angle)
@@ -134,11 +134,11 @@ void ZPolygon::Scale(float scaleFactor)
 	}
 }
 
-void ZPolygon::Scale(ZPoint scaleFactor)
+void ZPolygon::Scale(float xScale, float yScale)
 {
 	for (int i = 0; i < points.size(); i++)
 	{
-		points[i].Scale(scaleFactor);
+		points[i].Scale(xScale, yScale);
 	}
 }
 
@@ -147,6 +147,14 @@ void ZPolygon::Rotate(float angle)
 	for (int i = 0; i < points.size(); i++)
 	{
 		points[i].Rotate(angle);
+	}
+}
+
+void ZPolygon::ApplyFunction(void(*foo) (ZPoint &, ZPoint), ZPoint arg)
+{
+	for (int i = 0; i < points.size(); i++)
+	{
+		foo(points[i], arg);
 	}
 }
 
@@ -186,15 +194,15 @@ void ZImage::Scale(float f)
 	}
 }
 
-void ZImage::Scale(ZPoint scaleFactor)
+void ZImage::Scale(float xScale, float yScale)
 {
 	for (int i = 0; i < lines.size(); i++)
 	{
-		lines[i].Scale(scaleFactor);
+		lines[i].Scale(xScale, yScale);
 	}
 	for (int i = 0; i < polygons.size(); i++)
 	{
-		polygons[i].Scale(scaleFactor);
+		polygons[i].Scale(xScale, yScale);
 	}
 }
 

@@ -12,7 +12,7 @@ void TestTranslations(ZImage& image);
 int main(int argc, char* argv[])
 {
 	//argument things
-	string fileName = "hw2/hw2_c.ps";
+	string fileName = "hw3.ps";
 	ZPoint * lowerBound = new ZPoint(0,0);
 	ZPoint * upperBound = new ZPoint(250,250);
 	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(200,200));
@@ -166,6 +166,8 @@ void TestLineDraws(XPMOutput& xpm)
 	//xpm.DrawLine(ZLine(ZPoint(0, 0), ZPoint(30, 10)), XPMOutput::Color::BLACK);
 	//xpm.DrawLine(ZLine(ZPoint(-10, -10), ZPoint(10, 10)), XPMOutput::Color::BLACK);
 	//xpm.DrawLine(ZLine(ZPoint(25, 0), ZPoint(25, 10)), XPMOutput::Color::BLACK);
+
+	//testing 
 //	ZPolygon poly = imageInWindow->image.polygons[0];
 //	ZPoint toMove(4000, 3000);
 //	poly.ApplyFunction(ZPoint::TranslateP, toMove);
