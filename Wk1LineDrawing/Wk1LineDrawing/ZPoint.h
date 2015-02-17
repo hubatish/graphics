@@ -31,6 +31,10 @@ public:
 	~ZLine();
 
 	float GetSlope();
+	static bool IsSlopeVertical(float m)
+	{
+		return(m == INT_MAX);
+	}
 	ZPoint startPoint, endPoint;
 	void Translate(ZPoint point);
 	void Scale(float scaleFactor);

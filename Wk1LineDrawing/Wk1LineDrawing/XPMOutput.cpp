@@ -110,11 +110,19 @@ void XPMOutput::DrawLine(ZLine line, Color color)
 	}
 	else
 	{
-		//use y
+		//steep line, use y
 		int y, yTop, x;
 		float xTrue;
 
-		m = 1.0 / m;
+		//this check is not strictly necessary but it looks clean
+		if (ZLine::IsSlopeVertical(m))
+		{
+			m = 0;
+		}
+		else
+		{
+			m = 1.0 / m;
+		}
 
 		//choose which point is lower
 		ZPoint minPoint, maxPoint;
@@ -180,20 +188,32 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 	//actually find intersections & draw lines
 	for (auto iter : intersectingLines)
 	{
+		float curY = (float)iter.first;
 		vector<ZLine> lines = iter.second;
 		vector<int> intersectionXs;
 		for (auto line : lines)
 		{
-			float reverseM = ((float)line.endPoint.y - (float)line.startPoint.y) / ((float)line.endPoint.x - (float)line.startPoint.x);
-			float curY = (float) iter.first;
-			int curX = line.startPoint.x + reverseM * (float)(curY - (float)line.startPoint.y);
+			int curX;
+			float reverseM = ((float)line.endPoint.x - (float)line.startPoint.x) / ((float)line.endPoint.y - (float)line.startPoint.y);
+			curX = floor((float)line.startPoint.x + reverseM* (float)(curY - (float)line.startPoint.y));
 			intersectionXs.push_back(curX);
 		}
 		//sort the xs
 		sort(intersectionXs.begin(), intersectionXs.end());
+		int * prevX = NULL;
 		for (auto x : intersectionXs)
 		{
-
+			if (prevX == NULL)
+			{
+				prevX = new int(x);
+			}
+			else
+			{
+				//handle duplicates???????
+				ZLine toDraw = ZLine(ZPoint(*prevX, curY), ZPoint(x, curY));
+				DrawLine(toDraw, color);
+				prevX = NULL;
+			}
 		}
 	}
 }
@@ -206,7 +226,7 @@ void XPMOutput::DrawImage(ZImage & image, Color color)
 	}
 	for (int i = 0; i < image.polygons.size(); i++)
 	{
-		DrawPolygon(image.polygons[i], color);
+		FillPolygon(image.polygons[i], color);
 	}
 }
 
