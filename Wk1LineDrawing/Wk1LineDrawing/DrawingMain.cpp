@@ -13,8 +13,9 @@ int main(int argc, char* argv[])
 {
 	//argument things
 	string fileName = "hw2/hw2_c.ps";
-	ZPoint * lowerBound = NULL;
-	ZPoint * upperBound = NULL;
+	ZPoint * lowerBound = new ZPoint(0,0);
+	ZPoint * upperBound = new ZPoint(250,250);
+	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(200,200));
 	float scale = 1.0;
 	float degreeAngle = 0;
 	float translateX = 0;
@@ -28,6 +29,7 @@ int main(int argc, char* argv[])
 		{
 			fileName = argv[i + 1];
 		}
+		//Check window bounds
 		else if (curArg.compare("-a")==0)
 		{
 			//lower bound x dimension world window
@@ -61,6 +63,41 @@ int main(int argc, char* argv[])
 			}
 			upperBound->y = stoi(argv[i + 1]);
 		}
+		//Check viewport bounds
+		else if (curArg.compare("-j") == 0)
+		{
+			//lower bound x dimension world window
+			if (viewPortRect == NULL)
+			{
+				viewPortRect = new ZRect();
+			}
+			viewPortRect->lowerBound.x = stoi(argv[i + 1]);
+		}
+		else if (curArg.compare("-k") == 0)
+		{ 
+			if (viewPortRect == NULL)
+			{
+				viewPortRect = new ZRect();
+			}
+			viewPortRect->lowerBound.y = stoi(argv[i + 1]);
+		}
+		else if (curArg.compare("-o") == 0)
+		{
+			if (viewPortRect == NULL)
+			{
+				viewPortRect = new ZRect();
+			}
+			viewPortRect->upperBound.x = stoi(argv[i + 1]);
+		}
+		else if (curArg.compare("-p") == 0)
+		{
+			if (viewPortRect == NULL)
+			{
+				viewPortRect = new ZRect();
+			}
+			viewPortRect->upperBound.y = stoi(argv[i + 1]);
+		}
+		//Transformations
 		else if (curArg.compare("-s") == 0)
 		{
 			scale = stof(argv[i + 1]);
@@ -101,9 +138,17 @@ int main(int argc, char* argv[])
 	}
 
 	BoundedImage imageInWorld(image, new ZRect(lowerBound, upperBound));
-	BoundedImage * imageInWindow = imageInWorld.FitToViewort(ZRect(lowerBound, upperBound));
+	BoundedImage * imageInWindow;
+	if (viewPortRect == NULL)
+	{
+		imageInWindow = &imageInWorld;
+	}
+	else
+	{
+		imageInWindow = imageInWorld.FitToViewort(*viewPortRect);
+	}
 
-	XPMOutput xpm(new ZRect(lowerBound,upperBound));
+	XPMOutput xpm(new ZRect());
 
 	xpm.DrawImage(imageInWindow->image, Color::BLACK);
 
