@@ -15,6 +15,7 @@ public:
 	ZPoint(const ZPoint & p);
 	~ZPoint();
 
+	static void TranslateP(ZPoint & point, ZPoint translation){ point.Translate(translation); }
 	void Translate(ZPoint point) { x += point.x; y += point.y; }
 	void Scale(float f) { x *= f; y *= f; }
 	void Scale(ZPoint scaleFactor);
@@ -52,6 +53,13 @@ public:
 
 	vector<ZPoint> points;
 
+	void ApplyFunction(void(*foo) (ZPoint &, ZPoint), ZPoint arg)
+	{
+		for (int i = 0; i < points.size(); i++)
+		{
+			foo(points[i], arg);
+		}
+	}
 	void AddPoint(ZPoint point);
 	void Translate(ZPoint point);
 	void Scale(float scaleFactor);

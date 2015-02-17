@@ -166,4 +166,8 @@ void TestLineDraws(XPMOutput& xpm)
 	//xpm.DrawLine(ZLine(ZPoint(0, 0), ZPoint(30, 10)), XPMOutput::Color::BLACK);
 	//xpm.DrawLine(ZLine(ZPoint(-10, -10), ZPoint(10, 10)), XPMOutput::Color::BLACK);
 	//xpm.DrawLine(ZLine(ZPoint(25, 0), ZPoint(25, 10)), XPMOutput::Color::BLACK);
+//	ZPolygon poly = imageInWindow->image.polygons[0];
+//	ZPoint toMove(4000, 3000);
+//	poly.ApplyFunction(ZPoint::TranslateP, toMove);
+
 }
