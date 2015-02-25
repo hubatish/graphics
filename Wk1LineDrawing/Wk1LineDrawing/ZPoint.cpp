@@ -1,5 +1,8 @@
 #include "ZPoint.h"
 
+ZContainer::ZContainer(const ZContainer & c)
+{
+}
 
 ZPoint::ZPoint(float x, float y)
 {

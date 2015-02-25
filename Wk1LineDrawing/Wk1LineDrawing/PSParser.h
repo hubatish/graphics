@@ -8,10 +8,10 @@ using namespace std;
 class PSParser : public Parser
 {
 public:
-	PSParser():Parser(){}
+	PSParser(){}
 
-	virtual void InitialCutting();
-	virtual ZImage* ParseLines();
+	void InitialCutting();
+	ZContainer* Parse();
 };
 
 #endif

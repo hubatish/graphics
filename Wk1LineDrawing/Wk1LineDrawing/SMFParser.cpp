@@ -1,8 +1,8 @@
 #include "SMFParser.h"
 
-ZMesh * SMFParser::ParseMesh()
+ZContainer * SMFParser::Parse()
 {
-	ZMesh* image = new ZMesh();
+	ZImage* image = new ZImage();
 
 	try
 	{
@@ -28,10 +28,13 @@ ZMesh * SMFParser::ParseMesh()
 				//f p0 p1 p2
 
 				ZPolygon * polygon = new ZPolygon();
-				for (auto & point : points)
-				{
-					polygon->AddPoint(point);
-				}
+
+				int p0 = stoi(tokens[i + 1]) - 1;
+				int p1 = stoi(tokens[i + 2]) - 1;
+				int p2 = stoi(tokens[i + 3]) - 1;
+				polygon->AddPoint(points[p0]);
+				polygon->AddPoint(points[p1]);
+				polygon->AddPoint(points[p2]);
 				image->AddPolygon(*polygon);
 			}
 		}

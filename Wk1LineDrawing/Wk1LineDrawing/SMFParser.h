@@ -9,6 +9,5 @@ public:
 	SMFParser() :Parser(){}
 
 	virtual void InitialCutting(){}
-	ZMesh* ParseMesh();
-	virtual ZImage* ParseImage(){}
+	virtual ZContainer* Parse();
 };

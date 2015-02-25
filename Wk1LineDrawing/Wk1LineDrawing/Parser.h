@@ -18,8 +18,10 @@ public:
 
 	void Initialize(string f);
 	void Tokenize(string c);
-	virtual void InitialCutting() = 0;
-	virtual ZImage* ParseLines() = 0;
+	virtual void InitialCutting(){}
+	virtual ZContainer* Parse()
+	{ 
+		return NULL; }
 	void MakeStringLower(string *str);
 
 	string fileContents;

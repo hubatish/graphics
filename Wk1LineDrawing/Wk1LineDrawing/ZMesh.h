@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class ZMesh
+class ZMesh : public ZContainer
 {
 public:
 	ZMesh();

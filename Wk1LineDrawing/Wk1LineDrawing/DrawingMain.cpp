@@ -4,6 +4,7 @@
 #include "PSParser.h"
 #include "ZPoint.h"
 #include "XPMOutput.h"
+#include "SMFParser.h"
 #include <iostream>
 
 void TestLineDraws(XPMOutput& xpm);
@@ -12,7 +13,7 @@ void TestTranslations(ZImage& image);
 int main(int argc, char* argv[])
 {
 	//argument things
-	string fileName = "hw3/hw3.ps";
+	string fileName = "hw4/cube.smf";
 	ZPoint * lowerBound = new ZPoint(0,0);
 	ZPoint * upperBound = new ZPoint(250,250);
 	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(200,200));
@@ -116,14 +117,20 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if (fileName.find(".ps") != string::npos)
+	bool isPSFile = (fileName.find(".ps") != string::npos);
+	
+	Parser * parser;
+	if (isPSFile)
 	{
-
+		parser = new PSParser();
 	}
-	PSParser parser = PSParser();
-	parser.Initialize(fileName);
+	else
+	{
+		parser = new SMFParser();
+	}
+	parser->Initialize(fileName);
 
-	ZImage * image = parser.ParseLines();
+	ZContainer * image = parser->Parse();
 
 	if (scale != 1.0)
 	{
@@ -142,7 +149,7 @@ int main(int argc, char* argv[])
 		image->Translate(ZPoint(0, translateY));
 	}
 
-	BoundedImage imageInWorld(image, new ZRect(lowerBound, upperBound));
+	BoundedImage imageInWorld((ZImage*)image, new ZRect(lowerBound, upperBound));
 	BoundedImage * imageInWindow;
 	if (viewPortRect == NULL)
 	{

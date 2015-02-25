@@ -21,7 +21,7 @@ void PSParser::InitialCutting()
 	fileContents.erase(pos, fileContents.size());
 }
 
-ZImage * PSParser::ParseLines()
+ZContainer * PSParser::Parse()
 {
 	ZImage* image = new ZImage();
 

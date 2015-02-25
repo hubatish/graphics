@@ -25,7 +25,20 @@ public:
 	float x, y, z;
 };
 
-class ZLine
+class ZContainer
+{
+public:
+	ZContainer(){}
+	ZContainer(const ZContainer & c);
+	~ZContainer(){}
+
+	virtual void Scale(float f){}
+	virtual void Scale(float xScale, float yScale){}
+	virtual void Translate(ZPoint point){}
+	virtual void Rotate(float angle){}
+};
+
+class ZLine : public ZContainer
 {
 public:
 	ZLine(ZPoint start, ZPoint end);
@@ -45,7 +58,7 @@ public:
 	void Rotate(float angle);
 };
 
-class ZPolygon
+class ZPolygon : public ZContainer
 {
 public:
 	ZPolygon();
@@ -62,7 +75,7 @@ public:
 	void Rotate(float angle);
 };
 
-class ZImage
+class ZImage : public ZContainer
 {
 public:
 	ZImage();
