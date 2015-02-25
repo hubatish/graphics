@@ -80,15 +80,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="PSParser.h" />
+    <ClInclude Include="SMFParser.h" />
     <ClInclude Include="XPMOutput.h" />
+    <ClInclude Include="ZMesh.h" />
     <ClInclude Include="ZPoint.h" />
     <ClInclude Include="ZRect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DrawingMain.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PSParser.cpp" />
+    <ClCompile Include="SMFParser.cpp" />
     <ClCompile Include="XPMOutput.cpp" />
+    <ClCompile Include="ZMesh.cpp" />
     <ClCompile Include="ZPoint.cpp" />
     <ClCompile Include="ZRect.cpp" />
   </ItemGroup>

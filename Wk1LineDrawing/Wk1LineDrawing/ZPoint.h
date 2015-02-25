@@ -10,7 +10,8 @@ using namespace std;
 class ZPoint
 {
 public:
-	ZPoint(int x, int y);
+	ZPoint(float x, float y);
+	ZPoint(float x, float y, float z);
 	ZPoint();
 	ZPoint(const ZPoint & p);
 	~ZPoint();
@@ -21,7 +22,7 @@ public:
 	void Scale(float xScale, float yScale);
 	void Rotate(float degreeAngle);
 
-	int x, y;
+	float x, y, z;
 };
 
 class ZLine

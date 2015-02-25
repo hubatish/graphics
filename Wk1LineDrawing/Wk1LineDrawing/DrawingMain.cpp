@@ -12,7 +12,7 @@ void TestTranslations(ZImage& image);
 int main(int argc, char* argv[])
 {
 	//argument things
-	string fileName = "hw3.ps";
+	string fileName = "hw3/hw3.ps";
 	ZPoint * lowerBound = new ZPoint(0,0);
 	ZPoint * upperBound = new ZPoint(250,250);
 	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(200,200));
@@ -116,7 +116,12 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	PSParser parser = PSParser(fileName);
+	if (fileName.find(".ps") != string::npos)
+	{
+
+	}
+	PSParser parser = PSParser();
+	parser.Initialize(fileName);
 
 	ZImage * image = parser.ParseLines();
 
@@ -154,7 +159,7 @@ int main(int argc, char* argv[])
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&cout);
+	xpm.Output(&fout);
 
 	return 0;
 }

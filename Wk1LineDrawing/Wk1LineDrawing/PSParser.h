@@ -1,31 +1,17 @@
-#ifndef XPM_OUTPUT_H
-#define XPM_OUTPUT_H
+#ifndef PS_PARSER_H
+#define PS_PARSER_H
 
 #pragma once
-#include <string>
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <exception>
-#include <sstream>
-#include <algorithm>
-#include <iterator>
-#include "ZPoint.h"
+#include "Parser.h"
 using namespace std;
 
-class PSParser
+class PSParser : public Parser
 {
-	string fileContents;
-
 public:
-	PSParser(string f);
-	~PSParser();
+	PSParser():Parser(){}
 
-	void Tokenize(string c);
-	ZImage* ParseLines();
-	void MakeStringLower(string *str);
-
-	vector<string> tokens;
+	virtual void InitialCutting();
+	virtual ZImage* ParseLines();
 };
 
 #endif

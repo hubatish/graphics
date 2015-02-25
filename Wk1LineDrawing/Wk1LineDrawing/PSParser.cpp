@@ -1,66 +1,24 @@
 #include "PSParser.h"
 
-PSParser::PSParser(string f)
+void PSParser::InitialCutting()
 {
-//commetn for make
-	try
+	//get rid of first part
+	const string startString = "%%%BEGIN";
+	int pos = fileContents.find(startString);
+	if (pos == -1)
 	{
-		fstream file;
-		file.open(f);
-		fileContents = *(new string((istreambuf_iterator<char>(file)),
-			istreambuf_iterator<char>()));
-
-		//get rid of first part
-		const string startString = "%%%BEGIN";
-		int pos = fileContents.find(startString);
-		if (pos == -1)
-		{
-			throw 20;
-		}
-		fileContents.erase(0, pos+startString.size() );
-
-		//erase end part
-		const string endString = "%%%END";
-		pos = fileContents.find(endString);
-		if (pos == -1)
-		{
-			throw 20;
-		}
-		fileContents.erase(pos, fileContents.size());
-		string splitters = "\n\ ";
-		Tokenize(splitters);
-
+		throw 20;
 	}
-	catch (exception ex)
+	fileContents.erase(0, pos + startString.size());
+
+	//erase end part
+	const string endString = "%%%END";
+	pos = fileContents.find(endString);
+	if (pos == -1)
 	{
+		throw 20;
 	}
-}
-
-
-PSParser::~PSParser()
-{
-}
-
-void PSParser::Tokenize(string c)
-{
-	istringstream iss(fileContents);
-	copy(istream_iterator<string>(iss),
-		istream_iterator<string>(),
-		back_inserter(tokens));
-
-	for (int i = 0; i < tokens.size(); i++)
-	{
-		MakeStringLower(&tokens[i]);
-	}
-}
-
-void PSParser::MakeStringLower(string * str)
-{
-	for (int i = 0; i < str->size(); i++)
-	{
-		string yo = (*str);
-		(*str)[i] = tolower((*str)[i]);
-	}
+	fileContents.erase(pos, fileContents.size());
 }
 
 ZImage * PSParser::ParseLines()

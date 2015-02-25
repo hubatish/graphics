@@ -1,22 +1,32 @@
 #include "ZPoint.h"
 
 
-ZPoint::ZPoint(int x, int y)
+ZPoint::ZPoint(float x, float y)
 {
 	this->x = x;
 	this->y = y;
+	this->z = 0;
+}
+
+ZPoint::ZPoint(float x, float y, float z)
+{
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 
 ZPoint::ZPoint(const ZPoint & p)
 {
 	x = p.x;
 	y = p.y;
+	z = p.z;
 }
 
 ZPoint::ZPoint()
 {
 	x = 0;
 	y = 0;
+	z = 0;
 }
 
 ZPoint::~ZPoint()
