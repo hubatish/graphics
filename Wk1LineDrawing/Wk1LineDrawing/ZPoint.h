@@ -20,7 +20,7 @@ public:
 	~ZPoint();
 
 	static void TranslateP(ZPoint & point, ZPoint translation){ point.Translate(translation); } //static for application experiment
-	void Translate(ZPoint point) { x += point.x; y += point.y; }
+	void Translate(ZPoint point);// { x += point.x; y += point.y; }
 	void Scale(float f) { x *= f; y *= f; }
 	void Scale(float xScale, float yScale);
 	void Rotate(float degreeAngle);

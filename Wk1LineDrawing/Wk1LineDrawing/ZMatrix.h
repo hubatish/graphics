@@ -12,6 +12,6 @@ public:
 	~ZMatrix();
 
 	static Matrix4f GetScaleMatrix(ZPoint scale);
-	static Matrix4f GetScaleTranslate(ZPoint toMove);
+	static Matrix4f GetTranslateMatrix(ZPoint toMove);
 };
 

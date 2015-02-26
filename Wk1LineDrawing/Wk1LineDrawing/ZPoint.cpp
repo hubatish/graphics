@@ -46,6 +46,13 @@ void ZPoint::Rotate(float degreeAngle)
 	x = xNew;
 }
 
+void ZPoint::Translate(ZPoint point)
+{
+	Matrix4f m = ZMatrix::GetTranslateMatrix(point);
+	Transform(m);
+//	x += point.x; y += point.y;
+}
+
 void ZPoint::Scale(float xScale, float yScale)
 { 
 	Matrix4f m = ZMatrix::GetScaleMatrix(ZPoint(xScale, yScale, 1));
