@@ -4,8 +4,11 @@
 #include <cmath>
 #include <cstdint>
 #include <climits>
+#include <Eigen/Dense>
+#include "ZMatrix.h"
 #pragma once
 using namespace std;
+using namespace Eigen;
 
 class ZPoint
 {
@@ -21,6 +24,8 @@ public:
 	void Scale(float f) { x *= f; y *= f; }
 	void Scale(float xScale, float yScale);
 	void Rotate(float degreeAngle);
+
+	void Transform(const Matrix4f & m);
 
 	float x, y, z;
 };

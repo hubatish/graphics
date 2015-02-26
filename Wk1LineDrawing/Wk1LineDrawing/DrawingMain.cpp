@@ -13,7 +13,7 @@ void TestTranslations(ZImage& image);
 int main(int argc, char* argv[])
 {
 	//argument things
-	string fileName = "hw4/cube.smf";
+	string fileName = "hw3/hw3.ps";
 	ZPoint * lowerBound = new ZPoint(0,0);
 	ZPoint * upperBound = new ZPoint(250,250);
 	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(200,200));

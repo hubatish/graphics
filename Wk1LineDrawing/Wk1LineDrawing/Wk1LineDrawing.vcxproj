@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);./</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -84,6 +85,7 @@
     <ClInclude Include="PSParser.h" />
     <ClInclude Include="SMFParser.h" />
     <ClInclude Include="XPMOutput.h" />
+    <ClInclude Include="ZMatrix.h" />
     <ClInclude Include="ZMesh.h" />
     <ClInclude Include="ZPoint.h" />
     <ClInclude Include="ZRect.h" />
@@ -94,6 +96,7 @@
     <ClCompile Include="PSParser.cpp" />
     <ClCompile Include="SMFParser.cpp" />
     <ClCompile Include="XPMOutput.cpp" />
+    <ClCompile Include="ZMatrix.cpp" />
     <ClCompile Include="ZMesh.cpp" />
     <ClCompile Include="ZPoint.cpp" />
     <ClCompile Include="ZRect.cpp" />

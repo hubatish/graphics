@@ -48,7 +48,22 @@ void ZPoint::Rotate(float degreeAngle)
 
 void ZPoint::Scale(float xScale, float yScale)
 { 
-	x *= xScale; y *= yScale; 
+	Matrix4f m = ZMatrix::GetScaleMatrix(ZPoint(xScale, yScale, 1));
+	Transform(m);
+	//x *= xScale; y *= yScale; 
+}
+
+void ZPoint::Transform(const Matrix4f & m)
+{
+	Vector4f v;
+	v << x,
+		y,
+		z,
+		1;
+	v = m * v;
+	x = v(0);
+	y = v(1);
+	z = v(2);
 }
 
 ZLine::ZLine(ZPoint start, ZPoint end)
