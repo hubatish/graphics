@@ -15,6 +15,7 @@ class ZPoint
 public:
 	ZPoint(float x, float y);
 	ZPoint(float x, float y, float z);
+	ZPoint(Vector3f v);
 	ZPoint();
 	ZPoint(const ZPoint & p);
 	~ZPoint();
@@ -24,6 +25,10 @@ public:
 	void Scale(float f) { x *= f; y *= f; }
 	void Scale(float xScale, float yScale);
 	void Rotate(float degreeAngle);
+	void Normalize();
+
+	float GetMagnitude();
+	Vector3f ToVector3();
 
 	void Transform(const Matrix4f & m);
 
@@ -41,6 +46,8 @@ public:
 	virtual void Scale(float xScale, float yScale){}
 	virtual void Translate(ZPoint point){}
 	virtual void Rotate(float angle){}
+
+	virtual void Transform(const Matrix4f & m){}
 };
 
 class ZLine : public ZContainer
@@ -61,6 +68,8 @@ public:
 	void Scale(float scaleFactor);
 	void Scale(float xScale, float yScale);
 	void Rotate(float angle);
+
+	void Transform(const Matrix4f & m);
 };
 
 class ZPolygon : public ZContainer
@@ -78,6 +87,8 @@ public:
 	void Scale(float scaleFactor);
 	void Scale(float xScale, float yScale);
 	void Rotate(float angle);
+
+	void Transform(const Matrix4f & m);
 };
 
 class ZImage : public ZContainer
@@ -98,6 +109,8 @@ public:
 	void Translate(ZPoint point);
 	void Rotate(float angle);
 	void Clip(ZPoint lower, ZPoint upper);
+
+	void Transform(const Matrix4f & m);
 };
 
 #endif

@@ -43,6 +43,9 @@
     <ClInclude Include="ZMatrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ViewVolume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PSParser.cpp">
@@ -70,6 +73,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ZMatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewVolume.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

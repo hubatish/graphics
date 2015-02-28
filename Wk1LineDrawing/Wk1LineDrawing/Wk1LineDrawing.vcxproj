@@ -58,6 +58,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -84,6 +88,7 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PSParser.h" />
     <ClInclude Include="SMFParser.h" />
+    <ClInclude Include="ViewVolume.h" />
     <ClInclude Include="XPMOutput.h" />
     <ClInclude Include="ZMatrix.h" />
     <ClInclude Include="ZMesh.h" />
@@ -95,6 +100,7 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PSParser.cpp" />
     <ClCompile Include="SMFParser.cpp" />
+    <ClCompile Include="ViewVolume.cpp" />
     <ClCompile Include="XPMOutput.cpp" />
     <ClCompile Include="ZMatrix.cpp" />
     <ClCompile Include="ZMesh.cpp" />

@@ -25,6 +25,13 @@ ZPoint::ZPoint(const ZPoint & p)
 	z = p.z;
 }
 
+ZPoint::ZPoint(Vector3f v)
+{
+	x = v(0);
+	y = v(1);
+	z = v(2);
+}
+
 ZPoint::ZPoint()
 {
 	x = 0;
@@ -73,6 +80,26 @@ void ZPoint::Transform(const Matrix4f & m)
 	z = v(2);
 }
 
+void ZPoint::Normalize()
+{
+	Scale(1.0 / GetMagnitude());
+}
+
+float ZPoint::GetMagnitude()
+{
+	float sum = x*x + y*y + z*z;
+	return sqrt(sum);
+}
+
+Vector3f ZPoint::ToVector3()
+{
+	Vector3f v;
+	v << x,
+		y,
+		z;
+	return v;
+}
+
 ZLine::ZLine(ZPoint start, ZPoint end)
 {
 	this->startPoint = start;
@@ -119,6 +146,11 @@ void ZLine::Rotate(float angle)
 	endPoint.Rotate(angle);
 }
 
+void ZLine::Transform(const Matrix4f & m)
+{
+	startPoint.Transform(m);
+	endPoint.Transform(m);
+}
 
 float ZLine::GetSlope()
 {
@@ -182,6 +214,14 @@ void ZPolygon::Rotate(float angle)
 	for (int i = 0; i < points.size(); i++)
 	{
 		points[i].Rotate(angle);
+	}
+}
+
+void ZPolygon::Transform(const Matrix4f & m)
+{
+	for(auto point : points)
+	{
+		point.Transform(m);
 	}
 }
 
@@ -263,5 +303,17 @@ void ZImage::Rotate(float angle)
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		polygons[i].Rotate(angle);
+	}
+}
+
+void ZImage::Transform(const Matrix4f & m)
+{
+	for (int i = 0; i < lines.size(); i++)
+	{
+		lines[i].Transform(m);
+	}
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		polygons[i].Transform(m);
 	}
 }

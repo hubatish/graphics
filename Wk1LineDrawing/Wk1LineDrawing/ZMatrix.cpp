@@ -5,7 +5,6 @@ ZMatrix::ZMatrix()
 {
 }
 
-
 ZMatrix::~ZMatrix()
 {
 }

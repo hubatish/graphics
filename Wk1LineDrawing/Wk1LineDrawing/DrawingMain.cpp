@@ -5,6 +5,7 @@
 #include "ZPoint.h"
 #include "XPMOutput.h"
 #include "SMFParser.h"
+#include "ViewVolume.h"
 #include <iostream>
 
 void TestLineDraws(XPMOutput& xpm);
@@ -21,6 +22,8 @@ int main(int argc, char* argv[])
 	float degreeAngle = 0;
 	float translateX = 0;
 	float translateY = 0;
+	bool useParallel = false;
+	ViewVolume volume;
 
 	//Parse command line arguments
 	for (int i = 0; i < argc - 1; i ++)
@@ -98,8 +101,12 @@ int main(int argc, char* argv[])
 			}
 			viewPortRect->upperBound.y = stoi(argv[i + 1]);
 		}
+		else if (curArg.compare("-P") == 0 || ((string)argv[i + 1]).compare("-P") == 0)
+		{
+			useParallel = true;
+		}
 		//Transformations
-		else if (curArg.compare("-s") == 0)
+		/*else if (curArg.compare("-s") == 0)
 		{
 			scale = stof(argv[i + 1]);
 		}
@@ -114,7 +121,8 @@ int main(int argc, char* argv[])
 		else if (curArg.compare("-n") == 0)
 		{
 			translateY = stof(argv[i + 1]);
-		}
+		}*/
+		volume.ParseArg(argv[i], argv[i + 1]);
 	}
 
 	bool isPSFile = (fileName.find(".ps") != string::npos);
@@ -132,22 +140,8 @@ int main(int argc, char* argv[])
 
 	ZContainer * image = parser->Parse();
 
-	if (scale != 1.0)
-	{
-		image->Scale(scale);
-	}
-	if (degreeAngle != 0)
-	{
-		image->Rotate(degreeAngle);
-	}
-	if (translateX != 0)
-	{
-		image->Translate(ZPoint(translateX,0));
-	}
-	if (translateY != 0)
-	{
-		image->Translate(ZPoint(0, translateY));
-	}
+	Matrix4f projection = volume.GetPerspectiveMatrix();
+	image->Transform(projection);
 
 	BoundedImage imageInWorld((ZImage*)image, new ZRect(lowerBound, upperBound));
 	BoundedImage * imageInWindow;
