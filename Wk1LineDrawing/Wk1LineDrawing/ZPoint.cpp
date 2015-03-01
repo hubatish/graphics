@@ -219,9 +219,9 @@ void ZPolygon::Rotate(float angle)
 
 void ZPolygon::Transform(const Matrix4f & m)
 {
-	for(auto point : points)
+	for (int i = 0; i < points.size();i++)
 	{
-		point.Transform(m);
+		points[i].Transform(m);
 	}
 }
 
@@ -315,5 +315,19 @@ void ZImage::Transform(const Matrix4f & m)
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		polygons[i].Transform(m);
+	}
+}
+
+void ZImage::Homogenize(float d)
+{
+	for (int i = 0; i < polygons.size(); i++)
+	{
+		for (int j = 0; j < polygons[i].points.size(); j++)
+		{
+			float zD = polygons[i].points[j].z / d;
+			polygons[i].points[j].x /= zD;
+			polygons[i].points[j].y /= zD;
+			polygons[i].points[j].z = d;
+		}
 	}
 }

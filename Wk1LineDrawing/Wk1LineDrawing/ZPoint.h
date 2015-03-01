@@ -22,7 +22,7 @@ public:
 
 	static void TranslateP(ZPoint & point, ZPoint translation){ point.Translate(translation); } //static for application experiment
 	void Translate(ZPoint point);// { x += point.x; y += point.y; }
-	void Scale(float f) { x *= f; y *= f; }
+	void Scale(float f) { x *= f; y *= f; z *= f; }
 	void Scale(float xScale, float yScale);
 	void Rotate(float degreeAngle);
 	void Normalize();
@@ -47,6 +47,8 @@ public:
 	virtual void Translate(ZPoint point){}
 	virtual void Rotate(float angle){}
 
+	//apply a scaling to x & y relative to z/d
+	virtual void Homogenize(float d){}
 	virtual void Transform(const Matrix4f & m){}
 };
 
@@ -111,6 +113,7 @@ public:
 	void Clip(ZPoint lower, ZPoint upper);
 
 	void Transform(const Matrix4f & m);
+	void Homogenize(float d);
 };
 
 #endif

@@ -232,7 +232,7 @@ void XPMOutput::DrawImage(ZImage & image, Color color)
 	}
 	for (int i = 0; i < image.polygons.size(); i++)
 	{
-		FillPolygon(image.polygons[i], color);
+		DrawPolygon(image.polygons[i], color);
 	}
 }
 

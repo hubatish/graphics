@@ -16,8 +16,8 @@ int main(int argc, char* argv[])
 	//argument things
 	string fileName = "hw3/hw3.ps";
 	ZPoint * lowerBound = new ZPoint(0,0);
-	ZPoint * upperBound = new ZPoint(250,250);
-	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(200,200));
+	ZPoint * upperBound = new ZPoint(500,500);
+	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(500,500));
 	float scale = 1.0;
 	float degreeAngle = 0;
 	float translateX = 0;
@@ -104,6 +104,7 @@ int main(int argc, char* argv[])
 		else if (curArg.compare("-P") == 0 || ((string)argv[i + 1]).compare("-P") == 0)
 		{
 			useParallel = true;
+			volume.parallel = true;
 		}
 		//Transformations
 		/*else if (curArg.compare("-s") == 0)
@@ -140,10 +141,12 @@ int main(int argc, char* argv[])
 
 	ZContainer * image = parser->Parse();
 
-	Matrix4f projection = volume.GetPerspectiveMatrix();
-	image->Transform(projection);
+	volume.Project(*image);
 
-	BoundedImage imageInWorld((ZImage*)image, new ZRect(lowerBound, upperBound));
+	float zProj = abs(volume.GetZProj());
+	lowerBound = new ZPoint(-zProj, -zProj);
+	upperBound = new ZPoint(zProj, zProj);
+	BoundedImage imageInWorld((ZImage*)image, volume.GetCanonicalRect());
 	BoundedImage * imageInWindow;
 	if (viewPortRect == NULL)
 	{
@@ -154,7 +157,7 @@ int main(int argc, char* argv[])
 		imageInWindow = imageInWorld.FitToViewort(*viewPortRect);
 	}
 
-	XPMOutput xpm(new ZRect());
+	XPMOutput xpm(viewPortRect);
 
 	xpm.DrawImage(imageInWindow->image, Color::BLACK);
 
@@ -178,4 +181,17 @@ void TestLineDraws(XPMOutput& xpm)
 //	ZPoint toMove(4000, 3000);
 //	poly.ApplyFunction(ZPoint::TranslateP, toMove);
 
+}
+
+void TestPointTransformation()
+{
+	ZPoint p1(5, 5, 10);
+	Matrix4f m;
+	m <<
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 1, 0;
+	p1.Transform(m);
+	float skekek = 3;
 }
