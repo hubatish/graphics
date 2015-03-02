@@ -1,5 +1,7 @@
 #include "ViewVolume.h"
 
+//important reference:
+//	https://www.cs.drexel.edu/~david/Classes/CS430/Lectures/L-13_Math3DViewing.pdf
 
 ViewVolume::ViewVolume()
 {
@@ -121,20 +123,20 @@ Matrix4f ViewVolume::GetParallelMatrix()
 
 	//Translate center to origin and scale to 2x2x1
 	Matrix4f T, S;
-	float dX = ClampZero(vrcMax.x - vrcMin.x);
-	float dY = ClampZero(vrcMax.y - vrcMin.y);
-	float dB = ClampZero(front - back);
 	float sumX = vrcMax.x + vrcMin.x;
 	float sumY = vrcMax.y + vrcMin.y;
 	T << 1, 0, 0, -sumX / 2.0,
 		0, 1, 0, -sumY / 2.0,
 		0, 0, 1, -front,
 		0, 0, 0, 1;
+	float dX = ClampZero(vrcMax.x - vrcMin.x);
+	float dY = ClampZero(vrcMax.y - vrcMin.y);
+	float dB = ClampZero(front - back);
 	S << 
 		2.0 / dX, 0, 0, 0,
-		0, 2 / dY, 0, 0,
-		0, 0, 1 / dB, 0,
-		0, 0, 0, 1;
+		0, 2.0 / dY, 0, 0,
+		0, 0, 1.0 / dB, 0,
+		0, 0, 0, 1.0;
 	
 	Matrix4f nPar;
 	nPar = S*(T*(ShearMatrix*(R*TVRP)));
@@ -146,24 +148,13 @@ Matrix4f ViewVolume::GetParallelMatrix()
 	return nPar;
 }
 
-Matrix4f ViewVolume::HomogenousToPerspectiveMatrix()
-{
-	Matrix4f m;
-	float d = prp.z - vrp.z;
-	m << 1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 1 / abs(d), 0;
-	return m;
-}
-
 Matrix4f ViewVolume::GetPerspectiveMatrix()
 {
 	Matrix4f perspectiveM;
 
 	//Translate VRP to origin
 	ZPoint toMove = vrp;
-	toMove.Scale(-1);
+	toMove.Scale(-1.0);
 	Matrix4f TPRP = ZMatrix::GetTranslateMatrix(toMove);
 
 	//Rotate VPN to z, VUP to y
@@ -173,22 +164,21 @@ Matrix4f ViewVolume::GetPerspectiveMatrix()
 	Matrix4f TVRP = GetTVRPMatrix();
 
 	//Shear centerline
-	float n = prp.z;
 	Matrix4f ShearMatrix = GetShearMatrix();
 
 	//Scale into canonical view volume
 	float dX = vrcMax.x - vrcMin.x;
 	float dY = vrcMax.y - vrcMin.y;
-	float dB = -prp.z + back;
+	float dB = prp.z - back;
 	dB = ClampZero(dB);
 	dX = ClampZero(dX);
 	dY = ClampZero(dY);
-	float vrp2Z = 2 * -prp.z;
+	float vrp2Z = 2.0 * prp.z;
 	Matrix4f S;
 	S << 
 		vrp2Z / (dX*dB), 0, 0, 0,
 		0, vrp2Z / (dY*dB), 0, 0,
-		0, 0, -1 / dB, 0,
+		0, 0, 1.0 / dB, 0,
 		0, 0, 0, 1;
 
 	perspectiveM = S * 
@@ -237,12 +227,13 @@ Matrix4f ViewVolume::GetRotationMatrix()
 
 Matrix4f ViewVolume::GetShearMatrix()
 {
+	//See page 24 of lecture
 	Matrix4f ShearMatrix = Matrix4f::Identity();
 	float n = prp.z;
 	if (n != 0)
 	{
 		float xCoeff = vrcMax.x + vrcMin.x;
-		float yCoeff = vrcMax.x + vrcMin.y;
+		float yCoeff = vrcMax.y + vrcMin.y;
 		xCoeff = (0.5*xCoeff - prp.x) / n;
 		yCoeff = (0.5*yCoeff - prp.y) / n;
 		ShearMatrix <<
@@ -258,7 +249,6 @@ void ViewVolume::ApplyPerspective(ZContainer & container)
 {
 	Matrix4f projection = GetPerspectiveMatrix();
 	container.Transform(projection);
-	Matrix4f outOfHomo = HomogenousToPerspectiveMatrix();
 	float d = prp.z - vrp.z;//abs(GetZProj());//
 	container.Homogenize(d);
 }

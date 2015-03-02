@@ -143,9 +143,6 @@ int main(int argc, char* argv[])
 
 	volume.Project(*image);
 
-	float zProj = abs(volume.GetZProj());
-	lowerBound = new ZPoint(-zProj, -zProj);
-	upperBound = new ZPoint(zProj, zProj);
 	BoundedImage imageInWorld((ZImage*)image, volume.GetCanonicalRect());
 	BoundedImage * imageInWindow;
 	if (viewPortRect == NULL)

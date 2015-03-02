@@ -14,8 +14,8 @@ XPMOutput::XPMOutput(ZRect * rect)
 	negLowerBound.Scale(-1);
 
 	//size initial grid based on bounds
-	int width = bounds.GetWidth();
-	int height = bounds.GetHeight();
+	int width = bounds.GetWidth()+1;
+	int height = bounds.GetHeight()+1;
 	
 	//initialize the grid to white
 	grid.resize(width);
@@ -38,8 +38,8 @@ void XPMOutput::Output(ostream* out)
 {
 	const string startingLines = "/* XPM */ \n static char *sco100[] = { \n \n /* width height num_colors chars_per_pixel */ \n";
 	*out << startingLines << endl;
-	int width = bounds.GetWidth();
-	int height = bounds.GetHeight();
+	int width = bounds.GetWidth()+1;
+	int height = bounds.GetHeight()+1;
 	*out << "\"" << width << " " << height << " " << num_colors << " " << chars_per_pixel << "\"," << endl;
 	*out << "/* colors */" << endl;
 	*out << "\"" << static_cast<char>(Color::BLACK) << " c #000000\"," << endl;

@@ -43,12 +43,8 @@ public:
 
 	float GetZProj()
 	{
-		float dB = back - prp.z;
-		if (dB == 0)
-		{
-			dB = 0.01;
-		}
-		return prp.z / dB;
+		float dB = ClampZero(back - prp.z);
+		return abs(prp.z / dB);
 	}
 
 	ViewVolume();
@@ -59,7 +55,6 @@ public:
 	ZRect * GetCanonicalRect();
 
 	Matrix4f GetParallelMatrix();
-	Matrix4f HomogenousToPerspectiveMatrix();
 	Matrix4f GetPerspectiveMatrix();
 	void ApplyPerspective(ZContainer & container);
 	void ApplyParallel(ZContainer & container);

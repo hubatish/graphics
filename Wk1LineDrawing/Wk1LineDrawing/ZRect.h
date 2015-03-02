@@ -20,8 +20,8 @@ public:
 	ZRect(ZPoint* lowerBound = NULL, ZPoint* upperBound = NULL);
 	~ZRect();
 
-	float GetWidth(){ return (upperBound.x - lowerBound.x + 1.0); }
-	float GetHeight() { return (upperBound.y - lowerBound.y + 1.0); }
+	float GetWidth(){ return (upperBound.x - lowerBound.x); }
+	float GetHeight() { return (upperBound.y - lowerBound.y); }
 
 	//help with line clipping algorithm
 	bool ClipLine(ZLine & line);
