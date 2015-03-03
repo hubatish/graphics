@@ -44,7 +44,7 @@ public:
 	float GetZProj()
 	{
 		float dB = ClampZero(back - prp.z);
-		return abs(prp.z / dB);
+		return prp.z / dB;
 	}
 
 	ViewVolume();

@@ -140,28 +140,33 @@ Matrix4f ViewVolume::GetParallelMatrix()
 	
 	Matrix4f nPar;
 	nPar = S*(T*(ShearMatrix*(R*TVRP)));
-	nPar <<
-		-.666666, 0, 0, 0,
-		0, 0.6666666, 0, 0,
-		0, 0, -0.16666, -0.166666,
-		0, 0, 0, 1;
+
 	return nPar;
+
+	/*//Test if matrix is correct:
+	string stringPM1 = ZMatrix::GetString(nPar);
+	//My matrix is correct!
+	Matrix4f pMatrix2;
+	pMatrix2 <<
+	-.666666, 0, 0, 0,
+	0, 0.6666666, 0, 0,
+	0, 0, -0.16666, -0.166666,
+	0, 0, 0, 1;
+	string stringPM2 = ZMatrix::GetString(pMatrix2);*/
 }
 
 Matrix4f ViewVolume::GetPerspectiveMatrix()
 {
-	Matrix4f perspectiveM;
-
 	//Translate VRP to origin
-	ZPoint toMove = vrp;
-	toMove.Scale(-1.0);
-	Matrix4f TPRP = ZMatrix::GetTranslateMatrix(toMove);
+	Matrix4f TVRP = GetTVRPMatrix();
 
 	//Rotate VPN to z, VUP to y
 	Matrix4f R = GetRotationMatrix();
 
-	//Translate COP to origin
-	Matrix4f TVRP = GetTVRPMatrix();
+	//Translate PRP out of origin???
+	ZPoint toMove = prp;
+	toMove.Scale(-1.0);
+	Matrix4f TPRP = ZMatrix::GetTranslateMatrix(toMove);
 
 	//Shear centerline
 	Matrix4f ShearMatrix = GetShearMatrix();
@@ -181,17 +186,24 @@ Matrix4f ViewVolume::GetPerspectiveMatrix()
 		0, 0, 1.0 / dB, 0,
 		0, 0, 0, 1;
 
+	Matrix4f perspectiveM;
 	perspectiveM = S * 
 					(ShearMatrix * 
 						(TPRP * 
 							(R*TVRP)));//*/
-	//one of my numbers here is negative
-	perspectiveM <<
+
+	return perspectiveM;
+
+	//Test if matrix is correct with sample
+/*	string stringPM1 = ZMatrix::GetString(perspectiveM);
+	//My matrix is correct!
+	Matrix4f pMatrix2;
+	pMatrix2 <<
 		-.1111111, 0, 0, 0,
 		0, .1111111, 0, 0,
-		0, 0, -1.666666, -1.6666666,
+		0, 0, -.16666666, -.1666666,
 		0, 0, 0, 1;
-	return perspectiveM;
+	string stringPM2 = ZMatrix::GetString(pMatrix2);*/
 }
 
 Matrix4f ViewVolume::GetTVRPMatrix()
@@ -249,7 +261,7 @@ void ViewVolume::ApplyPerspective(ZContainer & container)
 {
 	Matrix4f projection = GetPerspectiveMatrix();
 	container.Transform(projection);
-	float d = prp.z - vrp.z;//abs(GetZProj());//
+	float d = GetZProj();//prp.z - vrp.z;//
 	container.Homogenize(d);
 }
 

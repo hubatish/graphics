@@ -31,3 +31,17 @@ Matrix4f ZMatrix::GetTranslateMatrix(ZPoint toMove)
 	(*m)(3, 3) = 1;
 	return *m;
 }
+
+string ZMatrix::GetString(const Matrix4f & matrix)
+{
+	ostringstream str;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			str << matrix(i, j);
+			str << ",";
+		}
+	}
+	return str.str();
+}
