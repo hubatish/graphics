@@ -15,8 +15,7 @@ int main(int argc, char* argv[])
 {
 	//argument things
 	string fileName = "hw3/hw3.ps";
-	ZPoint * lowerBound = new ZPoint(0,0);
-	ZPoint * upperBound = new ZPoint(500,500);
+	ZRect * desktopRect = new ZRect(new ZPoint(0, 0), new ZPoint(500, 500));
 	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(500,500));
 	float scale = 1.0;
 	float degreeAngle = 0;
@@ -37,35 +36,19 @@ int main(int argc, char* argv[])
 		else if (curArg.compare("-a")==0)
 		{
 			//lower bound x dimension world window
-			if (lowerBound == NULL)
-			{
-				lowerBound = new ZPoint(0, 0);
-			}
-			lowerBound->x = stoi(argv[i + 1]);
+			desktopRect->lowerBound.x = stoi(argv[i + 1]);
 		}
 		else if (curArg.compare("-b")==0)
 		{
-			if (lowerBound == NULL)
-			{
-				lowerBound = new ZPoint(0, 0);
-			}
-			lowerBound->y = stoi(argv[i + 1]);
+			desktopRect->lowerBound.y = stoi(argv[i + 1]);
 		}
 		else if (curArg.compare("-c") == 0)
 		{
-			if (upperBound == NULL)
-			{
-				upperBound = new ZPoint(0, 0);
-			}
-			upperBound->x = stoi(argv[i + 1]);
+			desktopRect->upperBound.x = stoi(argv[i + 1]);
 		}
 		else if (curArg.compare("-d") == 0)
 		{
-			if (upperBound == NULL)
-			{
-				upperBound = new ZPoint(0, 0);
-			}
-			upperBound->y = stoi(argv[i + 1]);
+			desktopRect->upperBound.y = stoi(argv[i + 1]);
 		}
 		//Check viewport bounds
 		else if (curArg.compare("-j") == 0)
@@ -154,13 +137,13 @@ int main(int argc, char* argv[])
 		imageInWindow = imageInWorld.FitToViewort(*viewPortRect);
 	}
 
-	XPMOutput xpm(viewPortRect);
+	XPMOutput xpm(desktopRect);
 
 	xpm.DrawImage(imageInWindow->image, Color::BLACK);
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&fout);
+	xpm.Output(&cout);
 
 	return 0;
 }
