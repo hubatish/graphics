@@ -12,20 +12,45 @@
 #include <cmath>
 #include <bitset>
 #include <algorithm>
+#include <sstream>
+
 using namespace std;
 
-enum class Color : char { BLACK = 'B', WHITE = 'W' };
+enum class Color : char { BLACK = 'B', RED = 'R', BLUE = 'U', GREEN = 'G' };
+
+class ColorWShade
+{
+public:
+	Color baseColor;
+	int shade;
+
+	const static int maxShades = 20;
+
+	ColorWShade()
+	{
+		shade = rand()%maxShades;
+	}
+
+	ColorWShade(Color color)
+	{
+		baseColor = color;
+		shade = rand()%maxShades;
+	}
+
+	string ToHexString();
+	string ToXPMString();
+};
 
 struct PointOnGrid
 {
 	ZPoint p;
-	Color c;
+	ColorWShade c;
 };
 
 class XPMOutput
 {
 private:
-	const static int num_colors = 2;
+	const static int num_colors = 61;  //20 * 3 primary colors + black
 	const static int chars_per_pixel = 1;
 	//Requirements for bounds: lowerBoundx<=upperBoundx & lowerBoundy<=upperBoundy
 	ZPoint negLowerBound;

@@ -1,5 +1,61 @@
 #include "XPMOutput.h"
 
+//convert shade 0-20 to a value "00" to "ff"
+	//so output "00"-"ff" depending on shade
+string ColorWShade::ToHexString()
+{
+	//I don't think this worked!
+	float maxColor = 255.0;
+	float diffPerShade = 255.0 / ((float)maxShades); //flip this over!
+	float shade255 = ((float) shade )* diffPerShade;
+
+	//convert to hex
+	stringstream stream;
+	stream << hex << (int)shade255;
+	
+	//space hex code to 2 digits
+	string hexString = stream.str();
+	if (hexString.length() == 1)
+	{
+		//apparently this erases/clears the stream
+		stream.str("");
+		stream << "0" << hexString;
+		hexString = stream.str();
+	}
+
+	return hexString;
+}
+
+//output shade for reference in XPM output
+	//format C hex
+	//ex: R12	//for a red color with shade 12
+string ColorWShade::ToXPMString()
+{
+	if (baseColor == Color::BLACK)
+	{
+		//black has no shades
+		return "z";
+	}
+	//Combine shade & color into an ASCII value
+	int startPos = 50;
+	if (baseColor == Color::RED)
+	{
+		startPos += 0;
+	}
+	else if (baseColor == Color::GREEN)
+	{
+		startPos += 20;
+	}
+	else
+	{
+		//blue
+		startPos += 40;
+	}
+	char c = (startPos + shade);
+	stringstream stream;
+	stream << c;
+	return stream.str();
+}
 
 XPMOutput::XPMOutput(ZRect * rect)
 {
@@ -25,7 +81,7 @@ XPMOutput::XPMOutput(ZRect * rect)
 		for (int j = 0; j < height; j++)
 		{
 			grid[i][j] = PointOnGrid();
-			grid[i][j].c = Color::WHITE;
+			grid[i][j].c = ColorWShade(Color::BLACK);
 			grid[i][j].p = *(new ZPoint());
 		}
 	}
@@ -36,6 +92,45 @@ XPMOutput::~XPMOutput()
 {
 }
 
+//output 20 different shades for the color
+string ColorDeclaration(Color color)
+{
+	stringstream stream;
+	ColorWShade shadeRef;
+	for (int i = 0; i < shadeRef.maxShades; i++)
+	{
+		ColorWShade thisShade(color);
+		thisShade.shade = i;
+		string hexS = thisShade.ToHexString();
+		
+		//determine positioning of hex in string
+		stringstream colorSS;
+		if (color == Color::RED)
+		{
+			colorSS << hexS << "0000";
+		}
+		else if (color == Color::GREEN)
+		{
+			colorSS << "00" << hexS << "00";
+		}
+		else if (color == Color::BLUE)
+		{
+			colorSS << "0000" << hexS;
+		}
+		else
+		{
+			//color is black
+			colorSS << "000000";
+		}
+
+		//actually output!
+		stream << "\"" << thisShade.ToXPMString() << " c #" << colorSS.str() << "\"," << endl;
+	}
+
+	return stream.str();
+}
+
+//Assignment 5 started adding drawing with shades
 void XPMOutput::Output(ostream* out)
 {
 	const string startingLines = "/* XPM */ \n static char *sco100[] = { \n \n /* width height num_colors chars_per_pixel */ \n";
@@ -44,15 +139,20 @@ void XPMOutput::Output(ostream* out)
 	int height = bounds.GetHeight()+1;
 	*out << "\"" << width << " " << height << " " << num_colors << " " << chars_per_pixel << "\"," << endl;
 	*out << "/* colors */" << endl;
-	*out << "\"" << static_cast<char>(Color::BLACK) << " c #000000\"," << endl;
-	*out << "\"" << static_cast<char>(Color::WHITE) << " c #ffffff\"," << endl;
+	*out << "\"" << ColorWShade(Color::BLACK).ToXPMString() << " c #000000\"," << endl;
+	
+	//declare 3 primary colors
+	*out << ColorDeclaration(Color::RED);
+	*out << ColorDeclaration(Color::GREEN);
+	*out << ColorDeclaration(Color::BLUE);
+
 	*out << "/* pixels */" << endl;
 	for (int y = height-1; y >=0; y--)
 	{
 		*out << "\"";
 		for (int x = 0; x < width; x++)
 		{
-			*out << static_cast<char>(grid[x][y].c);
+			*out << grid[x][y].c.ToXPMString();
 		}
 		*out << "\"";
 		if (y != height)
@@ -71,7 +171,7 @@ void XPMOutput::DrawPoint(ZPoint point, Color color)
 	//Update to allow for z values
 	if (point.z>grid[point.x][point.y].p.z)
 	{
-		grid[point.x][point.y].c = color;
+		grid[point.x][point.y].c = ColorWShade(color);
 		grid[point.x][point.y].p = point;
 	}
 }

@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
 
 	XPMOutput xpm(desktopRect);
 
-	xpm.DrawImage(imageInWindow->image, Color::BLACK);
+	xpm.DrawImage(imageInWindow->image, Color::RED);
 
 	ofstream fout;
 	fout.open("out.xpm");
