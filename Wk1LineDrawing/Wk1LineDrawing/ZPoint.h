@@ -46,10 +46,12 @@ public:
 	virtual void Scale(float xScale, float yScale){}
 	virtual void Translate(ZPoint point){}
 	virtual void Rotate(float angle){}
+	virtual void Transform(const Matrix4f & m){}
 
+	//Assignment 4 & 5 - hack in there...
 	//apply a scaling to x & y relative to z/d
 	virtual void Homogenize(float d){}
-	virtual void Transform(const Matrix4f & m){}
+	virtual void CullBackFaces(){}
 };
 
 class ZLine : public ZContainer
@@ -90,6 +92,9 @@ public:
 	void Scale(float xScale, float yScale);
 	void Rotate(float angle);
 
+	//Assignment 5
+	ZPoint FindNormal();
+
 	void Transform(const Matrix4f & m);
 };
 
@@ -114,6 +119,8 @@ public:
 
 	void Transform(const Matrix4f & m);
 	void Homogenize(float d);
+	//Assignment 5
+	void CullBackFaces();
 };
 
 #endif

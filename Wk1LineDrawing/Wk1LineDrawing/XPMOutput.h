@@ -16,6 +16,12 @@ using namespace std;
 
 enum class Color : char { BLACK = 'B', WHITE = 'W' };
 
+struct PointOnGrid
+{
+	ZPoint p;
+	Color c;
+};
+
 class XPMOutput
 {
 private:
@@ -26,7 +32,7 @@ private:
 	ZRect bounds;
 	//Requirements for grid: has positions for every coordinate within the bounds
 	//Accessed by [x][y]
-	vector<vector<Color> > grid;
+	vector<vector<PointOnGrid> > grid;
 
 public:
 

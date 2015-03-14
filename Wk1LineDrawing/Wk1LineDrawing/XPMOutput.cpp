@@ -24,7 +24,9 @@ XPMOutput::XPMOutput(ZRect * rect)
 		grid[i].resize(height);
 		for (int j = 0; j < height; j++)
 		{
-			grid[i][j] = Color::WHITE;
+			grid[i][j] = PointOnGrid();
+			grid[i][j].c = Color::WHITE;
+			grid[i][j].p = *(new ZPoint());
 		}
 	}
 }
@@ -50,7 +52,7 @@ void XPMOutput::Output(ostream* out)
 		*out << "\"";
 		for (int x = 0; x < width; x++)
 		{
-			*out << static_cast<char>(grid[x][y]);
+			*out << static_cast<char>(grid[x][y].c);
 		}
 		*out << "\"";
 		if (y != height)
@@ -66,7 +68,12 @@ void XPMOutput::DrawPoint(ZPoint point, Color color)
 { 
 	//offset point so lowerBound is always at 0,0
 	OffsetPoint(point);
-	grid[point.x][point.y] = color; 
+	//Update to allow for z values
+	if (point.z>grid[point.x][point.y].p.z)
+	{
+		grid[point.x][point.y].c = color;
+		grid[point.x][point.y].p = point;
+	}
 }
 
 
@@ -77,6 +84,8 @@ void XPMOutput::DrawLine(ZLine line, Color color)
 	//DDA line drawing algorithm
 	float m = line.GetSlope();
 	
+	float z = line.startPoint.z;
+
 	if (-1 < m && m < 1)
 	{
 		//use x
@@ -102,7 +111,7 @@ void XPMOutput::DrawLine(ZLine line, Color color)
 
 		while (x < xRight)
 		{
-			DrawPoint(ZPoint(x, y), color);
+			DrawPoint(ZPoint(x, y, z), color);
 			yTrue = yTrue + m;
 			y = round(yTrue);
 			x++;
@@ -143,7 +152,7 @@ void XPMOutput::DrawLine(ZLine line, Color color)
 
 		while (y < yTop)
 		{
-			DrawPoint(ZPoint(x, y), color);
+			DrawPoint(ZPoint(x, y, z), color);
 			xTrue = xTrue + m;
 			x = round(xTrue);
 			y++;
@@ -174,6 +183,9 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 		return;
 	}
 
+	//Hacky addition of z - 3-13
+	float z = polygon.points[0].z;
+
 	//Create intersectingLines map - which edges intersect a scan line
 	map<int,vector<ZLine>> intersectingLines;
 	ZPoint * prev = &polygon.points[polygon.points.size() - 1];
@@ -196,7 +208,9 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 	{
 		float curY = (float)iter.first;
 		vector<ZLine> lines = iter.second;
-		vector<int> intersectionXs;
+
+		//find which xs intersect the line (comment added 3-13)
+		vector<float> intersectionXs;
 		for (auto line : lines)
 		{
 			int curX;
@@ -204,6 +218,7 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 			curX = floor((float)line.startPoint.x + reverseM* (float)(curY - (float)line.startPoint.y));
 			intersectionXs.push_back(curX);
 		}
+
 		//sort the xs
 		sort(intersectionXs.begin(), intersectionXs.end());
 		int * prevX = NULL;
@@ -216,7 +231,7 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 			else
 			{
 				//handle duplicates???????
-				ZLine toDraw = ZLine(ZPoint(*prevX, curY), ZPoint(x, curY));
+				ZLine toDraw = ZLine(ZPoint(*prevX, curY,z), ZPoint(x, curY,z));
 				DrawLine(toDraw, color);
 				prevX = NULL;
 			}

@@ -225,6 +225,25 @@ void ZPolygon::Transform(const Matrix4f & m)
 	}
 }
 
+//Assuming the polygon is a coplanar triangle, 
+	//Return the vector normal to that plane
+ZPoint ZPolygon::FindNormal()
+{
+	if (points.size() < 3)
+	{
+		return *(new ZPoint());
+	}
+	ZPoint* p;
+	//Assumes the polygon is a triangle
+	Vector3f p1 = points[1].ToVector3();
+	Vector3f p2 = points[2].ToVector3();
+	Vector3f p0 = points[0].ToVector3();
+	Vector3f n = (p1 - p0).cross(p2 - p0);
+	p = new ZPoint(n);
+	p->Normalize();
+	return *p;
+}
+
 void ZPolygon::ApplyFunction(void(*foo) (ZPoint &, ZPoint), ZPoint arg)
 {
 	for (int i = 0; i < points.size(); i++)
@@ -328,6 +347,20 @@ void ZImage::Homogenize(float d)
 			polygons[i].points[j].x /= zD;
 			polygons[i].points[j].y /= zD;
 			polygons[i].points[j].z = d;
+		}
+	}
+}
+
+void ZImage::CullBackFaces()
+{
+	for (int i = polygons.size() - 1; i >= 0; i--)
+	{
+		ZPoint n = polygons[i].FindNormal();
+		if (n.z < 0)
+		{
+			//This face is a back-face!
+			//Cull it!
+			polygons.erase(polygons.begin() + i);
 		}
 	}
 }

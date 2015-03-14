@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
 
 	ofstream fout;
 	fout.open("out.xpm");
-	xpm.Output(&cout);
+	xpm.Output(&fout);
 
 	return 0;
 }

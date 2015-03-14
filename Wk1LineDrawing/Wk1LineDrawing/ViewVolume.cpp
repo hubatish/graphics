@@ -281,6 +281,7 @@ void ViewVolume::Project(ZContainer & container)
 	{
 		ApplyPerspective(container);
 	}
+	container.CullBackFaces();
 }
 
 ZRect * ViewVolume::GetCanonicalRect()
