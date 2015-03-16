@@ -276,6 +276,7 @@ void ViewVolume::ApplyParallel(ZContainer & container)
 
 void ViewVolume::Project(ZContainer & container)
 {
+	container.CullBackFaces();
 	if (parallel)
 	{
 		ApplyParallel(container);
@@ -284,7 +285,6 @@ void ViewVolume::Project(ZContainer & container)
 	{
 		ApplyPerspective(container);
 	}
-	container.CullBackFaces();
 }
 
 ZRect * ViewVolume::GetCanonicalRect()

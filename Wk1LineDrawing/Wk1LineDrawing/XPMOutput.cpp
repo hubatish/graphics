@@ -1,13 +1,29 @@
 #include "XPMOutput.h"
 
+//ZH -- woo!  global variables.  really starting to hack 5-15
+float xpmZmin = 1000;
+
+float xpmZmax = -1000;
+
+ColorWShade::ColorWShade(Color color, float z)
+{
+	baseColor = color;
+	ZRect canonicalRect = *argsViewVolume.GetCanonicalRect();
+	float minZ = xpmZmin;//canonicalRect.lowerBound.z;
+	float maxZ = xpmZmax;//canonicalRect.upperBound.z;
+	float diff = abs(maxZ - minZ);
+	//distribute shade along z
+	shade = abs(z-minZ) / diff * (float)maxShades;
+}
+
 //convert shade 0-20 to a value "00" to "ff"
 	//so output "00"-"ff" depending on shade
 string ColorWShade::ToHexString()
 {
 	//I don't think this worked!
 	float maxColor = 255.0;
-	float diffPerShade = 255.0 / ((float)maxShades); //flip this over!
-	float shade255 = ((float) shade )* diffPerShade;
+	float diffPerShade = 255.0 / ((float)maxShades+1.0); //+1 so darkest shade is not black
+	float shade255 = ((float) shade +1.0)* diffPerShade;
 
 	//convert to hex
 	stringstream stream;
@@ -37,7 +53,7 @@ string ColorWShade::ToXPMString()
 		return "z";
 	}
 	//Combine shade & color into an ASCII value
-	int startPos = 50;
+	int startPos = 48;
 	if (baseColor == Color::RED)
 	{
 		startPos += 0;
@@ -52,6 +68,10 @@ string ColorWShade::ToXPMString()
 		startPos += 40;
 	}
 	char c = (startPos + shade);
+	if (c == '‚')
+	{
+		int a = 4;
+	}
 	stringstream stream;
 	stream << c;
 	return stream.str();
@@ -139,7 +159,7 @@ void XPMOutput::Output(ostream* out)
 	int height = bounds.GetHeight()+1;
 	*out << "\"" << width << " " << height << " " << num_colors << " " << chars_per_pixel << "\"," << endl;
 	*out << "/* colors */" << endl;
-	*out << "\"" << ColorWShade(Color::BLACK).ToXPMString() << " c #000000\"," << endl;
+	*out << "\"" << ColorWShade(Color::BLACK).ToXPMString() << " c #ffffff\"," << endl;
 	
 	//declare 3 primary colors
 	*out << ColorDeclaration(Color::RED);
@@ -179,6 +199,7 @@ void XPMOutput::DrawPoint(ZPoint point, Color color)
 
 ///Draw a line onto pixels
 ///While loop algorithm pseudo code from here: http://ocw.unican.es/ensenanzas-tecnicas/visualizacion-e-interaccion-grafica/material-de-clase-2/03-LineAlgorithms.pdf
+//ZH added z drawing with floats  for Assignemtn 5
 void XPMOutput::DrawLine(ZLine line, Color color)
 {
 	//DDA line drawing algorithm
@@ -275,6 +296,8 @@ void XPMOutput::DrawPolygon(ZPolygon & polygon, Color color)
 	}
 }
 
+bool PointSorter(ZPoint i, ZPoint j) { return (i.x < j.x); };
+
 void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 {
 	if (polygon.points.size() <= 0)
@@ -282,9 +305,6 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 		//don't process non-existant polygons
 		return;
 	}
-
-	//Hacky addition of z - 3-13
-	float z = polygon.points[0].z;
 
 	//Create intersectingLines map - which edges intersect a scan line
 	map<int,vector<ZLine>> intersectingLines;
@@ -310,30 +330,38 @@ void XPMOutput::FillPolygon(ZPolygon & polygon, Color color)
 		vector<ZLine> lines = iter.second;
 
 		//find which xs intersect the line (comment added 3-13)
-		vector<float> intersectionXs;
+		vector<ZPoint> intersectionPoints;
 		for (auto line : lines)
 		{
-			int curX;
+			float curX;
 			float reverseM = ((float)line.endPoint.x - (float)line.startPoint.x) / ((float)line.endPoint.y - (float)line.startPoint.y);
 			curX = floor((float)line.startPoint.x + reverseM* (float)(curY - (float)line.startPoint.y));
-			intersectionXs.push_back(curX);
+
+			//ZH 3-15 copied above curX code, not sure what did.  Generally refactored code to take points rather than just xs
+			float curZ;
+			reverseM = ((float)line.endPoint.z - (float)line.startPoint.z) / ((float)line.endPoint.y - (float)line.startPoint.y);
+			curZ = (float)line.startPoint.z + reverseM* (float)(curY - (float)line.startPoint.y);
+
+			ZPoint * p = new ZPoint(curX, curY, curZ);
+			intersectionPoints.push_back(*p);
 		}
 
-		//sort the xs
-		sort(intersectionXs.begin(), intersectionXs.end());
-		int * prevX = NULL;
-		for (auto x : intersectionXs)
+
+		//sort the points by xs
+		sort(intersectionPoints.begin(), intersectionPoints.end(),PointSorter);
+		ZPoint * prevPoint = NULL;
+		for (auto p : intersectionPoints)
 		{
-			if (prevX == NULL)
+			if (prevPoint == NULL)
 			{
-				prevX = new int(x);
+				prevPoint = new ZPoint(p);
 			}
 			else
 			{
 				//handle duplicates???????
-				ZLine toDraw = ZLine(ZPoint(*prevX, curY,z), ZPoint(x, curY,z));
+				ZLine toDraw = ZLine(*prevPoint, p);
 				DrawLine(toDraw, color);
-				prevX = NULL;
+				prevPoint = NULL;
 			}
 		}
 	}
@@ -345,9 +373,32 @@ void XPMOutput::DrawImage(ZImage & image, Color color)
 	{
 		DrawLine(image.lines[i],color);
 	}
+
+	//find z max & min for cheap shading good nesss hack ZH 3-15z
+	float zMin = 1000;
+	float zMax = -1000;
 	for (int i = 0; i < image.polygons.size(); i++)
 	{
-		DrawPolygon(image.polygons[i], color);
+		ZPolygon  * poly = &image.polygons[i];
+		for (int j = 0; j < poly->points.size(); j++)
+		{
+			float curZ = poly->points[j].z;
+			if (curZ < zMin)
+			{
+				zMin = curZ;
+			}
+			if (curZ > zMax)
+			{
+				zMax = curZ;
+			}
+		}
+	}
+	xpmZmin = zMin;
+	xpmZmax = zMax;
+
+	for (int i = 0; i < image.polygons.size(); i++)
+	{
+		FillPolygon(image.polygons[i], color);
 	}
 }
 

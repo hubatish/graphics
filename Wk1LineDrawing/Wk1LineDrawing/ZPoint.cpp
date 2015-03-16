@@ -346,7 +346,7 @@ void ZImage::Homogenize(float d)
 			float zD = polygons[i].points[j].z / d;
 			polygons[i].points[j].x /= zD;
 			polygons[i].points[j].y /= zD;
-			polygons[i].points[j].z = d;
+			polygons[i].points[j].z = zD;
 		}
 	}
 }
