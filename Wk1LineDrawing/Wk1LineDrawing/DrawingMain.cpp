@@ -15,7 +15,7 @@ void ProcessImage(const string & fileName, ZRect * viewPortRect, XPMOutput & xpm
 int main(int argc, char* argv[])
 {
 	//argument things
-	string fileName = "hw3/hw3.ps";
+	string fileName = "hw4/bound-sprellpsd.smf";
 	string greenFileName = "";
 	string blueFileName = "";
 	ZRect * desktopRect = new ZRect(new ZPoint(0, 0), new ZPoint(500, 500));
@@ -123,7 +123,10 @@ int main(int argc, char* argv[])
 
 	XPMOutput xpm(desktopRect);
 
-	ProcessImage(fileName, viewPortRect, xpm, Color::RED);
+	if (fileName.size() > 0)
+	{
+		ProcessImage(fileName, viewPortRect, xpm, Color::RED);
+	}
 
 	if (greenFileName.size() > 0)
 	{

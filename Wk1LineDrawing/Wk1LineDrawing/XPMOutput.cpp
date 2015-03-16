@@ -50,7 +50,7 @@ string ColorWShade::ToXPMString()
 	if (baseColor == Color::BLACK)
 	{
 		//black has no shades
-		return "z";
+		return " ";
 	}
 	//Combine shade & color into an ASCII value
 	int startPos = 48;
@@ -62,15 +62,15 @@ string ColorWShade::ToXPMString()
 	{
 		startPos += 20;
 	}
-	else
+	else if (baseColor == Color::BLUE)
 	{
 		//blue
-		startPos += 40;
+		startPos = 97;
 	}
 	char c = (startPos + shade);
 	switch (c)
 	{
-	case ';':
+	/*case ';':
 		c = 112;
 		break;
 	case '?':
@@ -78,7 +78,7 @@ string ColorWShade::ToXPMString()
 		break;
 	case '@':
 		c = 114;
-		break;
+		break;*/
 	default:
 		break;
 	}
