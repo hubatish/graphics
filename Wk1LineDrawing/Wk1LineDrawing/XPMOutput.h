@@ -5,6 +5,7 @@
 #include <string>
 #include "ZPoint.h"
 #include "ZRect.h"
+#include "ViewVolume.h"
 #include <iostream>
 #include <vector>
 #include <utility>
@@ -35,6 +36,15 @@ public:
 	{
 		baseColor = color;
 		shade = rand()%maxShades;
+	}
+
+	ColorWShade(Color color, float z)
+	{
+		baseColor = color;
+		float minZ = argsViewVolume.back;
+		float maxZ = argsViewVolume.front;
+		//distribute shade along z
+		shade = abs(z - minZ) / abs(maxZ - minZ) * (float)maxShades;
 	}
 
 	string ToHexString();

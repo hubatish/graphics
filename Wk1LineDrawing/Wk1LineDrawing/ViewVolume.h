@@ -62,3 +62,4 @@ public:
 	void Project(ZContainer & container);
 };
 
+extern ViewVolume argsViewVolume;

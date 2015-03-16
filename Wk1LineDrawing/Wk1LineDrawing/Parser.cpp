@@ -21,6 +21,7 @@ void Parser::Initialize(string f)
 	}
 	catch (exception ex)
 	{
+		cout << "problem reading file: " << ex.what() << endl;
 	}
 }
 

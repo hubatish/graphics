@@ -3,6 +3,9 @@
 //important reference:
 //	https://www.cs.drexel.edu/~david/Classes/CS430/Lectures/L-13_Math3DViewing.pdf
 
+ViewVolume argsViewVolume;
+
+
 ViewVolume::ViewVolume()
 {
 	//Projection Reference point defaults (VRC)

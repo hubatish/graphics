@@ -22,7 +22,8 @@ int main(int argc, char* argv[])
 	float translateX = 0;
 	float translateY = 0;
 	bool useParallel = false;
-	ViewVolume volume;
+
+	argsViewVolume = ViewVolume();
 
 	//Parse command line arguments
 	for (int i = 0; i < argc - 1; i ++)
@@ -87,7 +88,7 @@ int main(int argc, char* argv[])
 		else if (curArg.compare("-P") == 0 || ((string)argv[i + 1]).compare("-P") == 0)
 		{
 			useParallel = true;
-			volume.parallel = true;
+			argsViewVolume.parallel = true;
 		}
 		//Transformations
 		/*else if (curArg.compare("-s") == 0)
@@ -106,7 +107,7 @@ int main(int argc, char* argv[])
 		{
 			translateY = stof(argv[i + 1]);
 		}*/
-		volume.ParseArg(argv[i], argv[i + 1]);
+		argsViewVolume.ParseArg(argv[i], argv[i + 1]);
 	}
 
 	bool isPSFile = (fileName.find(".ps") != string::npos);
@@ -124,9 +125,9 @@ int main(int argc, char* argv[])
 
 	ZContainer * image = parser->Parse();
 
-	volume.Project(*image);
+	argsViewVolume.Project(*image);
 
-	BoundedImage imageInWorld((ZImage*)image, volume.GetCanonicalRect());
+	BoundedImage imageInWorld((ZImage*)image, argsViewVolume.GetCanonicalRect());
 	BoundedImage * imageInWindow;
 	if (viewPortRect == NULL)
 	{

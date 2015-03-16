@@ -41,6 +41,7 @@ bitset<4> ZRect::GetCohenSutherlandOutcode(ZPoint point)
 //Move x & y so that they're in bounds, and move the other value so it matches with slope
 ZPoint ZRect::ClipPoint(ZPoint point, ZLine line, int onlyEdge)
 {
+	//this preserves z
 	ZPoint newPoint = point;
 	float dx = line.endPoint.x - line.startPoint.x;
 	if (point.x < lowerBound.x && (onlyEdge == -1 || onlyEdge == 0))

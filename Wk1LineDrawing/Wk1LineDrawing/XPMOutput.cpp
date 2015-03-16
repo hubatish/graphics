@@ -171,7 +171,7 @@ void XPMOutput::DrawPoint(ZPoint point, Color color)
 	//Update to allow for z values
 	if (point.z>grid[point.x][point.y].p.z)
 	{
-		grid[point.x][point.y].c = ColorWShade(color);
+		grid[point.x][point.y].c = ColorWShade(color, point.z);
 		grid[point.x][point.y].p = point;
 	}
 }
