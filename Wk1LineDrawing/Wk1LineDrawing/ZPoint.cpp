@@ -337,6 +337,7 @@ void ZImage::Transform(const Matrix4f & m)
 	}
 }
 
+//ZH Need to get this to not? change z or do same to front/back
 void ZImage::Homogenize(float d)
 {
 	for (int i = 0; i < polygons.size(); i++)

@@ -10,11 +10,14 @@
 
 void TestLineDraws(XPMOutput& xpm);
 void TestTranslations(ZImage& image);
+void ProcessImage(const string & fileName, ZRect * viewPortRect, XPMOutput & xpm, Color color);
 
 int main(int argc, char* argv[])
 {
 	//argument things
 	string fileName = "hw3/hw3.ps";
+	string greenFileName = "";
+	string blueFileName = "";
 	ZRect * desktopRect = new ZRect(new ZPoint(0, 0), new ZPoint(500, 500));
 	ZRect * viewPortRect = new ZRect(new ZPoint(0,0),new ZPoint(500,500));
 	float scale = 1.0;
@@ -32,6 +35,14 @@ int main(int argc, char* argv[])
 		if (curArg.compare("-f")==0)
 		{
 			fileName = argv[i + 1];
+		}
+		if (curArg.compare("-g") == 0)
+		{
+			greenFileName = argv[i + 1];
+		}
+		if (curArg.compare("-i") == 0)
+		{
+			blueFileName = argv[i + 1];
 		}
 		//Check window bounds
 		else if (curArg.compare("-a")==0)
@@ -110,8 +121,31 @@ int main(int argc, char* argv[])
 		argsViewVolume.ParseArg(argv[i], argv[i + 1]);
 	}
 
+	XPMOutput xpm(desktopRect);
+
+	ProcessImage(fileName, viewPortRect, xpm, Color::RED);
+
+	if (greenFileName.size() > 0)
+	{
+		ProcessImage(greenFileName, viewPortRect, xpm, Color::GREEN);
+	}
+	if (blueFileName.size() > 0)
+	{
+		//green weorks, blue doesn't
+		ProcessImage(blueFileName, viewPortRect, xpm, Color::BLUE);
+	}
+
+	ofstream fout;
+	fout.open("out.xpm");
+	xpm.Output(&fout);
+
+	return 0;
+}
+
+void ProcessImage(const string & fileName, ZRect * viewPortRect, XPMOutput & xpm, Color color)
+{
 	bool isPSFile = (fileName.find(".ps") != string::npos);
-	
+
 	Parser * parser;
 	if (isPSFile)
 	{
@@ -121,6 +155,7 @@ int main(int argc, char* argv[])
 	{
 		parser = new SMFParser();
 	}
+
 	parser->Initialize(fileName);
 
 	ZContainer * image = parser->Parse();
@@ -138,15 +173,8 @@ int main(int argc, char* argv[])
 		imageInWindow = imageInWorld.FitToViewort(*viewPortRect);
 	}
 
-	XPMOutput xpm(desktopRect);
+	xpm.DrawImage(imageInWindow->image, color);
 
-	xpm.DrawImage(imageInWindow->image, Color::RED);
-
-	ofstream fout;
-	fout.open("out.xpm");
-	xpm.Output(&fout);
-
-	return 0;
 }
 
 void TestLineDraws(XPMOutput& xpm)
