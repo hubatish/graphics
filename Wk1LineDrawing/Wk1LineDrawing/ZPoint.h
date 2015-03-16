@@ -50,7 +50,7 @@ public:
 
 	//Assignment 4 & 5 - hack in there...
 	//apply a scaling to x & y relative to z/d
-	virtual void Homogenize(float d){}
+	virtual void Homogenize(float d, float vrpZ){}
 	virtual void CullBackFaces(){}
 };
 
@@ -118,7 +118,7 @@ public:
 	void Clip(ZPoint lower, ZPoint upper);
 
 	void Transform(const Matrix4f & m);
-	void Homogenize(float d);
+	void Homogenize(float d, float vrpZ);
 	//Assignment 5
 	void CullBackFaces();
 };

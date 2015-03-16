@@ -338,8 +338,9 @@ void ZImage::Transform(const Matrix4f & m)
 }
 
 //ZH Need to get this to not? change z or do same to front/back
-void ZImage::Homogenize(float d)
+void ZImage::Homogenize(float d, float vrpZ)
 {
+	//compensate for an odd shift
 	for (int i = 0; i < polygons.size(); i++)
 	{
 		for (int j = 0; j < polygons[i].points.size(); j++)
@@ -347,7 +348,7 @@ void ZImage::Homogenize(float d)
 			float zD = polygons[i].points[j].z / d;
 			polygons[i].points[j].x /= zD;
 			polygons[i].points[j].y /= zD;
-			polygons[i].points[j].z = zD;
+			polygons[i].points[j].z = zD - vrpZ;
 		}
 	}
 }

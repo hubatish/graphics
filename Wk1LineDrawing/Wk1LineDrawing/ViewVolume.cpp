@@ -14,6 +14,9 @@ ViewVolume::ViewVolume()
 	prp.z = 1;
 
 	//View Reference Point defaults to 0 for all
+	vrp.x = 0;
+	vrp.y = 0;
+	vrp.z = 0;
 
 	//View Plane Normal (WC)
 	vpn.x = 0;
@@ -169,6 +172,8 @@ Matrix4f ViewVolume::GetPerspectiveMatrix()
 	//Translate PRP out of origin???
 	ZPoint toMove = prp;
 	toMove.Scale(-1.0);
+	//trying out to stop zs
+	//toMove.z = 0;
 	Matrix4f TPRP = ZMatrix::GetTranslateMatrix(toMove);
 
 	//Shear centerline
@@ -265,7 +270,9 @@ void ViewVolume::ApplyPerspective(ZContainer & container)
 	Matrix4f projection = GetPerspectiveMatrix();
 	container.Transform(projection);
 	float d = GetZProj();//prp.z - vrp.z;//
-	container.Homogenize(d);
+//	ZPoint toMoveBack(0, 0, -prp.z);
+	//container.Translate(toMoveBack);
+	container.Homogenize(d,prp.z);
 }
 
 void ViewVolume::ApplyParallel(ZContainer & container)

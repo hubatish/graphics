@@ -9,8 +9,8 @@ ColorWShade::ColorWShade(Color color, float z)
 {
 	baseColor = color;
 	ZRect canonicalRect = *argsViewVolume.GetCanonicalRect();
-	float minZ = xpmZmin;//canonicalRect.lowerBound.z;
-	float maxZ = xpmZmax;//canonicalRect.upperBound.z;
+	float minZ = canonicalRect.lowerBound.z;//xpmZmin;//
+	float maxZ = canonicalRect.upperBound.z;//xpmZmax;//
 	float diff = abs(maxZ - minZ);
 	//distribute shade along z
 	shade = abs(z-minZ) / diff * (float)maxShades;

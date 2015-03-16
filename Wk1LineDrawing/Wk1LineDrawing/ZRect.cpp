@@ -262,6 +262,7 @@ BoundedImage * BoundedImage::FitToViewort(ZRect & view)
 	toScaleX = view.GetWidth() / bounds.GetWidth();
 	toScaleY = view.GetHeight() / bounds.GetHeight();
 	ZPoint toOrigin = bounds.lowerBound;
+	toOrigin.z = 0;
 	ZPoint toView = view.lowerBound;
 	ZImage * newImage = new ZImage(image);
 	toOrigin.Scale(-1.0);
