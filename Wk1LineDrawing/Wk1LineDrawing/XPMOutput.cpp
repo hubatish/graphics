@@ -64,8 +64,8 @@ string ColorWShade::ToXPMString()
 	}
 	else if (baseColor == Color::BLUE)
 	{
-		//blue
-		startPos = 97;
+		//blue doesn't work on my computer but maybe it works elsewhere
+		startPos = 'f';
 	}
 	char c = (startPos + shade);
 	switch (c)

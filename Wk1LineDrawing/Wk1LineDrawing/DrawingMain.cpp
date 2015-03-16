@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
 
 	if (fileName.size() > 0)
 	{
-		ProcessImage(fileName, viewPortRect, xpm, Color::RED);
+		ProcessImage(fileName, viewPortRect, xpm, Color::BLUE);
 	}
 
 	if (greenFileName.size() > 0)
