@@ -44,13 +44,16 @@ ZPoint ZRect::ClipPoint(ZPoint point, ZLine line, int onlyEdge)
 	//this preserves z
 	ZPoint newPoint = point;
 	float dx = line.endPoint.x - line.startPoint.x;
+	float dy = line.endPoint.y - line.startPoint.y;
+	float dz = line.endPoint.z - line.startPoint.z;
+
 	if (point.x < lowerBound.x && (onlyEdge == -1 || onlyEdge == 0))
 	{
 		//left
 		if (dx != 0)
 		{
-			newPoint.y = line.startPoint.y + (line.endPoint.y - line.startPoint.y)
-				* (lowerBound.x - line.startPoint.x) / (line.endPoint.x - line.startPoint.x);
+			newPoint.y = line.startPoint.y + (dy)
+				* (lowerBound.x - line.startPoint.x) / (dx);
 		}
 		newPoint.x = lowerBound.x;
 	}
@@ -59,19 +62,19 @@ ZPoint ZRect::ClipPoint(ZPoint point, ZLine line, int onlyEdge)
 		//right
 		if (dx != 0)
 		{
-			newPoint.y = line.startPoint.y + (line.endPoint.y - line.startPoint.y)
-				* (upperBound.x - line.startPoint.x) / (line.endPoint.x - line.startPoint.x);
+			newPoint.y = line.startPoint.y + (dy)
+				* (upperBound.x - line.startPoint.x) / (dx);
 		}
 		newPoint.x = upperBound.x;
 	}
-	float dy = line.endPoint.y - line.startPoint.y;
+
 	if (newPoint.y < lowerBound.y && (onlyEdge == -1 || onlyEdge == 2))
 	{
 		//bottom
 		if (dy != 0)
 		{
-			newPoint.x = line.startPoint.x + (line.endPoint.x - line.startPoint.x)
-				* (lowerBound.y - line.startPoint.y) / (line.endPoint.y - line.startPoint.y);
+			newPoint.x = line.startPoint.x + (dx)
+				* (lowerBound.y - line.startPoint.y) / (dy);
 		}
 		newPoint.y = lowerBound.y;
 	}
@@ -80,10 +83,36 @@ ZPoint ZRect::ClipPoint(ZPoint point, ZLine line, int onlyEdge)
 		//top
 		if (dy != 0)
 		{
-			newPoint.x = line.startPoint.x + (line.endPoint.x - line.startPoint.x)
-				* (upperBound.y - line.startPoint.y) / (line.endPoint.y - line.startPoint.y);
+			newPoint.x = line.startPoint.x + (dx)
+				* (upperBound.y - line.startPoint.y) / (dy);
 		}
 		newPoint.y = upperBound.y;
+	}
+
+	//trying to clip stuff with z assignment 5
+	if (newPoint.z < lowerBound.z)// && (onlyEdge == -1 || onlyEdge == 2))
+	{
+		//
+		if (dz != 0)
+		{
+			newPoint.x = line.startPoint.x + (dx)
+				* (lowerBound.z - line.startPoint.z) / (dz);
+			newPoint.y = line.startPoint.y + (dy)
+				* (lowerBound.z - line.startPoint.z) / (dz);
+		}
+		newPoint.z = lowerBound.z;
+	}
+	else if (newPoint.z > upperBound.z)// && (onlyEdge == -1 || onlyEdge == 3))
+	{
+		//
+		if (dz != 0)
+		{
+			newPoint.x = line.startPoint.x + (dx)
+				* (upperBound.z - line.startPoint.z) / (dz);
+			newPoint.y = line.startPoint.y + (dy)
+				* (upperBound.z - line.startPoint.z) / (dz);
+		}
+		newPoint.z = upperBound.z;
 	}
 
 	return newPoint;
@@ -262,7 +291,7 @@ BoundedImage * BoundedImage::FitToViewort(ZRect & view)
 	toScaleX = view.GetWidth() / bounds.GetWidth();
 	toScaleY = view.GetHeight() / bounds.GetHeight();
 	ZPoint toOrigin = bounds.lowerBound;
-	toOrigin.z = 0;
+	toOrigin.z = 0; //don't scale by z here!
 	ZPoint toView = view.lowerBound;
 	ZImage * newImage = new ZImage(image);
 	toOrigin.Scale(-1.0);

@@ -65,7 +65,7 @@ string ColorWShade::ToXPMString()
 	else if (baseColor == Color::BLUE)
 	{
 		//blue doesn't work on my computer but maybe it works elsewhere
-		startPos = 'f';
+		startPos = 'e';
 	}
 	char c = (startPos + shade);
 	switch (c)
@@ -170,7 +170,7 @@ void XPMOutput::Output(ostream* out)
 	int height = bounds.GetHeight()+1;
 	*out << "\"" << width << " " << height << " " << num_colors << " " << chars_per_pixel << "\"," << endl;
 	*out << "/* colors */" << endl;
-	*out << "\"" << ColorWShade(Color::BLACK).ToXPMString() << " c #ffffff\"," << endl;
+	*out << "\"" << ColorWShade(Color::BLACK).ToXPMString() << " c #000000\"," << endl;
 	
 	//declare 3 primary colors
 	*out << ColorDeclaration(Color::RED);
