@@ -68,10 +68,21 @@ string ColorWShade::ToXPMString()
 		startPos += 40;
 	}
 	char c = (startPos + shade);
-	if (c == '‚')
+	switch (c)
 	{
-		int a = 4;
+	case ';':
+		c = 112;
+		break;
+	case '?':
+		c = 113;
+		break;
+	case '@':
+		c = 114;
+		break;
+	default:
+		break;
 	}
+
 	stringstream stream;
 	stream << c;
 	return stream.str();
@@ -230,8 +241,22 @@ void XPMOutput::DrawLine(ZLine line, Color color)
 		y = yTrue = minPoint.y;
 		xRight = maxPoint.x;
 
+		//find z slope
+		float zXM = (maxPoint.z - minPoint.z) / (maxPoint.x - minPoint.x);
+		float xMidPoint = (maxPoint.x + minPoint.x) / 2.0;
+
 		while (x < xRight)
 		{
+			float z;
+			z = minPoint.z + zXM * (float)(x - minPoint.x); //floating point slow
+			if (x < xMidPoint)
+			{
+		//		z = minPoint.z;
+			}
+			else
+			{
+			//	z = maxPoint.z;
+			}
 			DrawPoint(ZPoint(x, y, z), color);
 			yTrue = yTrue + m;
 			y = round(yTrue);
@@ -271,8 +296,21 @@ void XPMOutput::DrawLine(ZLine line, Color color)
 		x = xTrue = minPoint.x;
 		yTop = maxPoint.y;
 
+		//find z slope
+		float zYM = (maxPoint.z - minPoint.z) / (maxPoint.y - minPoint.y);
+		float yMidPoint = (maxPoint.y + minPoint.y) / 2.0;
+
 		while (y < yTop)
 		{
+			float z = minPoint.z + zYM * (y - minPoint.y); //floating point slow
+			if (x < yMidPoint)
+			{
+				//z = minPoint.z;
+			}
+			else
+			{
+				//z = maxPoint.z;
+			}
 			DrawPoint(ZPoint(x, y, z), color);
 			xTrue = xTrue + m;
 			x = round(xTrue);
