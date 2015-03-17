@@ -99,6 +99,7 @@ XPMOutput::XPMOutput(ZRect * rect)
 	//need this for offsets
 	negLowerBound = bounds.lowerBound;
 	negLowerBound.Scale(-1);
+	negLowerBound.z = 0;
 
 	//size initial grid based on bounds
 	int width = bounds.GetWidth()+1;

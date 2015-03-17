@@ -270,8 +270,6 @@ void ViewVolume::ApplyPerspective(ZContainer & container)
 	Matrix4f projection = GetPerspectiveMatrix();
 	container.Transform(projection);
 	float d = GetZProj();//prp.z - vrp.z;//
-//	ZPoint toMoveBack(0, 0, -prp.z);
-	//container.Translate(toMoveBack);
 	container.Homogenize(d,prp.z);
 }
 
@@ -279,6 +277,8 @@ void ViewVolume::ApplyParallel(ZContainer & container)
 {
 	Matrix4f projection = GetParallelMatrix();
 	container.Transform(projection);
+	ZPoint toMoveBack(0, 0, -vrp.z);
+	container.Translate(toMoveBack);
 }
 
 void ViewVolume::Project(ZContainer & container)
