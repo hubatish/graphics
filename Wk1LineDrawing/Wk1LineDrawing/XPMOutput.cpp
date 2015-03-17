@@ -201,7 +201,7 @@ void XPMOutput::DrawPoint(ZPoint point, Color color)
 	//offset point so lowerBound is always at 0,0
 	OffsetPoint(point);
 	//Update to allow for z values
-	if (point.z>grid[point.x][point.y].p.z)
+	if (point.z < argsViewVolume.front && point.z>grid[point.x][point.y].p.z)
 	{
 		grid[point.x][point.y].c = ColorWShade(color, point.z);
 		grid[point.x][point.y].p = point;
